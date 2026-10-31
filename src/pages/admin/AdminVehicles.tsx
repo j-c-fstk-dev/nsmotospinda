@@ -86,8 +86,8 @@ export default function AdminVehicles() {
               <button
                 className={`icon-btn ${v.featured ? 'icon-btn--on' : ''}`}
                 aria-pressed={v.featured}
-                title={v.featured ? 'Tirar dos destaques' : 'Colocar nos destaques'}
-                onClick={() => patch(v, { featured: !v.featured, featured_rank: v.featured ? v.featured_rank : nextRank }, v.featured ? 'Removido dos destaques.' : 'Adicionado aos destaques.')}
+                title={v.featured ? 'Retirar destaque' : 'Colocar nos destaques'}
+                onClick={() => patch(v, { featured: !v.featured, featured_rank: v.featured ? v.featured_rank : nextRank }, v.featured ? 'Destaque retirado.' : 'Adicionado aos destaques.')}
               >
                 <StarIcon size={18} filled={v.featured} />
                 <span className="sr-only">Destaque</span>

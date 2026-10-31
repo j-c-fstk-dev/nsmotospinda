@@ -95,7 +95,7 @@ export default function AdminFeatured() {
                   <ArrowUpDown dir="down" />
                 </button>
                 <button className="btn btn--danger btn--sm" onClick={() => change(list.filter((x) => x.id !== v.id))}>
-                  Tirar
+                  Retirar destaque
                 </button>
               </div>
             </li>
