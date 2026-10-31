@@ -22,7 +22,18 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 
 ## Checklist para quando o cliente fechar
 
-1. **Supabase:** criar projeto → SQL Editor → rodar `supabase/schema.sql` → Authentication → Users → criar o usuário do lojista (e-mail + senha). Desativar "Allow new users to sign up".
+1. **Supabase:**
+   1. Criar o projeto → **SQL Editor** → colar e rodar `supabase/schema.sql` (pode rodar de novo sem problema; atualiza bancos antigos).
+   2. **Authentication → Users → Add user**: e-mail e senha do lojista, com *Auto Confirm User*.
+   3. **Liberar o lojista como admin** no SQL Editor (troque o e-mail):
+      ```sql
+      insert into public.admins (user_id)
+      select id from auth.users where email = 'email-do-dono@exemplo.com'
+      on conflict do nothing;
+      ```
+   4. Desligar o cadastro público (*Allow new users to sign up*) em Authentication.
+
+   Só quem está na tabela `admins` consegue alterar estoque, textos, fotos e ver métricas. Estar logado não basta: uma conta criada por engano entra no login, mas o painel recusa ("Este usuário não tem acesso ao painel") e o banco bloqueia qualquer gravação. Comandos para listar e remover admins estão no fim do `schema.sql`.
    - **Recuperação de senha** (usa o e-mail do próprio Supabase, sem serviço extra): em Authentication → URL Configuration, colocar o domínio em *Site URL* e adicionar `https://SEU-DOMINIO/admin/nova-senha` (e o endereço do Netlify) em *Redirect URLs*. Opcional: traduzir o modelo "Reset Password" em Authentication → Email Templates.
    - O e-mail embutido do Supabase tem limite de poucos envios por hora. Para um único administrador basta; se um dia precisar de mais, dá para configurar um SMTP próprio no mesmo painel.
 2. **Variáveis no Netlify** (acima) e redeploy. Cadastrar o estoque real pelo painel (`/admin`).

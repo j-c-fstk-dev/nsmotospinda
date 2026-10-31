@@ -48,24 +48,90 @@ create table if not exists public.events (
   created_at timestamptz not null default now()
 );
 
--- Segurança: o público só lê; só usuário logado (o lojista) escreve.
+-- =====================================================================
+-- Segurança
+-- Público: só lê o que está à venda e os dados da loja.
+-- Escrever: SÓ quem está na tabela admins. Estar logado não basta, então
+-- uma conta criada por engano (cadastro público ligado, por exemplo)
+-- não consegue mexer em nada.
+-- =====================================================================
+
+create table if not exists public.admins (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+alter table public.admins enable row level security;
+-- pela API cada um só enxerga a própria linha; incluir ou remover admin só pelo SQL Editor do Supabase
+drop policy if exists "admins self read" on public.admins;
+create policy "admins self read" on public.admins for select to authenticated using (user_id = auth.uid());
+
+-- usada pelas regras abaixo e pelo site (para saber se o login é de admin)
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from public.admins where user_id = auth.uid());
+$$;
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to anon, authenticated;
+
 alter table public.vehicles enable row level security;
 alter table public.settings enable row level security;
 alter table public.events enable row level security;
 
--- público não vê anúncios escondidos; o lojista logado vê tudo
-create policy "vehicles public read" on public.vehicles for select to anon using (hidden = false);
-create policy "vehicles admin read" on public.vehicles for select to authenticated using (true);
-create policy "vehicles admin write" on public.vehicles for all to authenticated using (true) with check (true);
+-- remove regras de versões anteriores deste arquivo (pode rodar de novo sem erro)
+drop policy if exists "vehicles public read" on public.vehicles;
+drop policy if exists "vehicles admin read" on public.vehicles;
+drop policy if exists "vehicles admin write" on public.vehicles;
+drop policy if exists "settings public read" on public.settings;
+drop policy if exists "settings admin write" on public.settings;
+drop policy if exists "events anyone insert" on public.events;
+drop policy if exists "events admin read" on public.events;
+drop policy if exists "photos public read" on storage.objects;
+drop policy if exists "photos admin upload" on storage.objects;
+drop policy if exists "photos admin update" on storage.objects;
+drop policy if exists "photos admin delete" on storage.objects;
 
-create policy "settings public read" on public.settings for select using (true);
-create policy "settings admin write" on public.settings for all to authenticated using (true) with check (true);
+-- Veículos: público vê os não escondidos; admin vê e altera tudo
+create policy "vehicles public read" on public.vehicles for select to anon, authenticated using (hidden = false);
+create policy "vehicles admin read" on public.vehicles for select to authenticated using ((select public.is_admin()));
+create policy "vehicles admin write" on public.vehicles for all to authenticated
+  using ((select public.is_admin())) with check ((select public.is_admin()));
 
-create policy "events anyone insert" on public.events for insert to anon, authenticated with check (true);
-create policy "events admin read" on public.events for select to authenticated using (true);
+-- Dados da loja
+create policy "settings public read" on public.settings for select to anon, authenticated using (true);
+create policy "settings admin write" on public.settings for all to authenticated
+  using ((select public.is_admin())) with check ((select public.is_admin()));
+
+-- Métricas: qualquer visitante registra clique/visita; só admin lê
+create policy "events anyone insert" on public.events for insert to anon, authenticated
+  with check (kind in ('whatsapp', 'view', 'review'));
+create policy "events admin read" on public.events for select to authenticated using ((select public.is_admin()));
 
 -- Fotos
 insert into storage.buckets (id, name, public) values ('vehicles', 'vehicles', true) on conflict do nothing;
 create policy "photos public read" on storage.objects for select using (bucket_id = 'vehicles');
-create policy "photos admin upload" on storage.objects for insert to authenticated with check (bucket_id = 'vehicles');
-create policy "photos admin delete" on storage.objects for delete to authenticated using (bucket_id = 'vehicles');
+create policy "photos admin upload" on storage.objects for insert to authenticated
+  with check (bucket_id = 'vehicles' and (select public.is_admin()));
+create policy "photos admin update" on storage.objects for update to authenticated
+  using (bucket_id = 'vehicles' and (select public.is_admin()));
+create policy "photos admin delete" on storage.objects for delete to authenticated
+  using (bucket_id = 'vehicles' and (select public.is_admin()));
+
+-- =====================================================================
+-- LIBERAR O DONO DA LOJA (rodar depois de criar o usuário dele em
+-- Authentication > Users). Troque o e-mail:
+--
+--   insert into public.admins (user_id)
+--   select id from auth.users where email = 'email-do-dono@exemplo.com'
+--   on conflict do nothing;
+--
+-- Conferir quem é admin:
+--   select u.email from public.admins a join auth.users u on u.id = a.user_id;
+--
+-- Tirar o acesso de alguém:
+--   delete from public.admins where user_id = (select id from auth.users where email = '...');
+-- =====================================================================

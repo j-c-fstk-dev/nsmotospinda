@@ -155,10 +155,21 @@ export async function listEvents(): Promise<TrackEvent[]> {
 }
 
 // ---------- Autenticação ----------
+/** Confere no banco se o login atual está na tabela admins (função is_admin do schema) */
+async function checkAdmin(): Promise<boolean> {
+  if (!supabase) return true
+  const { data, error } = await supabase.rpc('is_admin')
+  return !error && data === true
+}
+
 export async function signIn(email: string, password: string) {
   if (supabase) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw new Error('E-mail ou senha incorretos.')
+    if (!(await checkAdmin())) {
+      await supabase.auth.signOut()
+      throw new Error('Este usuário não tem acesso ao painel.')
+    }
     return
   }
   if (email.trim().toLowerCase() !== DEMO_LOGIN.email || password !== DEMO_LOGIN.password) {
@@ -173,7 +184,7 @@ export async function signOut() {
 }
 
 export async function isSignedIn(): Promise<boolean> {
-  if (supabase) return !!(await supabase.auth.getSession()).data.session
+  if (supabase) return !!(await supabase.auth.getSession()).data.session && (await checkAdmin())
   return sessionStorage.getItem(K.session) === '1'
 }
 
