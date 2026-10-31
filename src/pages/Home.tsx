@@ -12,6 +12,17 @@ import { ReviewCard } from '../components/ReviewCard'
 import { MapBlock } from '../components/MapBlock'
 import { WhatsAppIcon } from '../components/Icons'
 
+// Serviços como aparecem no material da própria loja
+const SERVICES = [
+  { t: 'Motos seminovas e usadas', d: 'Todas as marcas e cilindradas, revisadas antes de sair.' },
+  { t: 'Carros seminovos e usados', d: 'Também trabalhamos com carros. Pergunte o que tem no pátio.' },
+  { t: 'Consignação', d: 'Deixe sua moto ou carro com a gente e vendemos com segurança e transparência.' },
+  { t: 'Financiamento facilitado', d: 'Simulação com os principais bancos e entrada parcelada no cartão.' },
+  { t: 'Consórcio', d: 'Planeje a próxima moto sem juros de financiamento.' },
+]
+
+const WA_CONSIGN = 'Olá! Quero vender minha moto/carro. Como funciona a consignação na NS Multimarcas?'
+
 const STEPS = [
   { t: 'Escolha a moto', d: 'Veja o estoque aqui no site ou venha olhar de perto na loja, no centro de Pinda.' },
   { t: 'Traga a sua na troca', d: 'Avaliamos sua moto ou carro na hora e o valor entra como parte do pagamento.' },
@@ -81,6 +92,25 @@ export default function Home() {
               </div>
             </Link>
           )}
+        </div>
+      </section>
+
+      <section className="services" aria-label="O que fazemos">
+        <div className="wrap">
+          <ul className="services__list">
+            {SERVICES.map((s) => (
+              <li key={s.t}>
+                <h2 className="services__t">{s.t}</h2>
+                <p className="services__d">{s.d}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="services__cta">
+            Quer vender a sua?{' '}
+            <a className="link" href={waLink(settings, WA_CONSIGN)} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
+              Fale sobre consignação no WhatsApp
+            </a>
+          </p>
         </div>
       </section>
 

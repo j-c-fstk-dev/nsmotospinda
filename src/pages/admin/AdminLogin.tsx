@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DEMO_LOGIN, DEMO_MODE, signIn } from '../../lib/store'
-import { LogoMark } from '../../components/Logo'
+import { LogoImg } from '../../components/Logo'
 
 export default function AdminLogin() {
   const nav = useNavigate()
@@ -26,8 +26,8 @@ export default function AdminLogin() {
 
   return (
     <div className="login">
+      <LogoImg height={64} className="login__logo" />
       <form className="login__card" onSubmit={submit}>
-        <LogoMark size={40} />
         <h1>Entrar no painel</h1>
         {DEMO_MODE && <p className="notice">Demonstração: os dados de acesso já estão preenchidos.</p>}
         <label className="field">

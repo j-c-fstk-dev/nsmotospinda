@@ -48,7 +48,7 @@ export function Layout() {
       <footer className="footer">
         <div className="wrap footer__grid">
           <div>
-            <Logo light />
+            <Logo />
             <p className="footer__text">{settings.tagline}. Compra, venda, troca e financiamento.</p>
           </div>
           <div>
@@ -67,6 +67,11 @@ export function Layout() {
             <a className="footer__link" href={wa} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
               <WhatsAppIcon size={16} /> {settings.whatsapp}
             </a>
+            {settings.phone && (
+              <a className="footer__link footer__phone" href={`tel:+55${settings.phone.replace(/\D/g, '')}`}>
+                {settings.phone}
+              </a>
+            )}
             <div className="footer__social">
               {settings.instagram && (
                 <a href={settings.instagram} target="_blank" rel="noopener" aria-label="Instagram">

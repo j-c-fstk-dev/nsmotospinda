@@ -4,16 +4,19 @@
    da placa), asfalto + azul placa + amarelo de faixa só para oferta. */
 
 :root {
-  --ink: #1f252c;
-  --ink-2: #39424c;
-  --muted: #5b6570;
-  --line: #d6dbe0;
-  --bg: #f1f3f5;
+  /* Identidade da loja: preto + dourado (fachada, logo da águia) */
+  --ink: #16140f;
+  --ink-2: #3b3832;
+  --muted: #66625a;
+  --line: #dcd8d0;
+  --bg: #f3f2ef;
   --surface: #ffffff;
-  --blue: #0039a6;
-  --blue-ink: #002a7a;
-  --blue-soft: #e5ecf8;
-  --yellow: #ffc20e;
+  --gold: #c9a13b;
+  --gold-2: #e6c76c;
+  --accent: #7a5c10; /* dourado escuro: texto/links sobre fundo claro (AA) */
+  --gold-soft: #f7f0dc;
+  --night: #0f0e0b;
+  --night-2: #23211c;
   --wa: #128c4a;
   --wa-ink: #0d6e3a;
   --danger: #b42318;
@@ -21,7 +24,7 @@
   --r-card: 12px;
   --r-ctl: 8px;
   --r-plate: 7px;
-  --shadow: 0 1px 2px rgba(31, 37, 44, 0.06), 0 8px 24px -12px rgba(31, 37, 44, 0.18);
+  --shadow: 0 1px 2px rgba(22, 20, 15, 0.06), 0 8px 24px -12px rgba(22, 20, 15, 0.18);
   --wrap: 1200px;
   --gutter: clamp(16px, 4vw, 32px);
 
@@ -69,7 +72,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -144,11 +147,11 @@ textarea {
   width: 100%;
 }
 .btn--primary {
-  background: var(--blue);
-  color: #fff;
+  background: var(--gold);
+  color: var(--ink);
 }
 .btn--primary:hover {
-  background: var(--blue-ink);
+  background: var(--gold-2);
 }
 .btn--wa {
   background: var(--wa);
@@ -178,7 +181,7 @@ textarea {
 }
 
 .link {
-  color: var(--blue);
+  color: var(--accent);
   font-weight: 650;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -208,8 +211,8 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: var(--blue);
-  color: #fff;
+  background: var(--ink);
+  color: var(--gold-2);
   padding: 2px 8px;
   font-size: 11px;
   font-weight: 600;
@@ -264,11 +267,16 @@ textarea {
   font-size: 42px;
 }
 .plate--promo .plate__band {
-  background: var(--yellow);
+  background: var(--gold);
   color: var(--ink);
 }
 
 /* ---------- Logo ---------- */
+.logo-img {
+  display: block;
+  height: 46px;
+  width: auto;
+}
 .logo {
   display: inline-flex;
   align-items: center;
@@ -289,7 +297,7 @@ textarea {
   position: absolute;
   inset: 0 0 auto 0;
   height: 26%;
-  background: var(--blue);
+  background: var(--accent);
 }
 .logo-mark__text {
   position: absolute;
@@ -321,7 +329,7 @@ textarea {
   color: #fff;
 }
 .logo--light .logo__city {
-  color: #aeb6bf;
+  color: #b3ad9f;
 }
 .logo--light .logo-mark {
   border-color: #fff;
@@ -329,8 +337,9 @@ textarea {
 
 /* ---------- Topo ---------- */
 .announce {
-  background: var(--ink);
-  color: #fff;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
   font-size: 14px;
   text-align: center;
   padding: 8px var(--gutter);
@@ -339,9 +348,9 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: saturate(1.4) blur(10px);
-  border-bottom: 1px solid var(--line);
+  background: var(--night);
+  color: #fff;
+  border-bottom: 1px solid var(--night-2);
 }
 .header__row {
   display: flex;
@@ -364,11 +373,12 @@ textarea {
 }
 .nav > a:not(.btn):hover,
 .nav > a.active {
-  border-bottom-color: var(--blue);
+  border-bottom-color: var(--gold);
 }
 .menu-btn {
   display: none;
   background: none;
+  color: #fff;
   border: 0;
   width: 44px;
   height: 44px;
@@ -389,8 +399,8 @@ textarea {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
+    background: var(--night);
+    border-bottom: 1px solid var(--night-2);
     padding: 8px var(--gutter) 20px;
   }
   .nav--open {
@@ -398,7 +408,7 @@ textarea {
   }
   .nav > a:not(.btn) {
     padding: 14px 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--night-2);
   }
   .nav__wa {
     margin-top: 16px;
@@ -442,10 +452,23 @@ textarea {
 
 /* ---------- Hero ---------- */
 .hero {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  padding: clamp(36px, 6vw, 72px) 0 clamp(40px, 6vw, 80px);
+  position: relative;
+  background: var(--night);
+  color: #fff;
+  padding: clamp(36px, 6vw, 72px) 0 clamp(64px, 8vw, 104px);
   overflow: hidden;
+}
+/* o piso quadriculado preto e branco do showroom */
+.hero::after,
+.floor {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28px;
+  background: repeating-conic-gradient(#2a2720 0 25%, #0f0e0b 0 50%) 0 0 / 28px 28px;
+  border-top: 1px solid var(--gold);
 }
 .hero__grid {
   display: grid;
@@ -465,7 +488,7 @@ textarea {
 .hero__lead {
   margin: 0 0 28px;
   font-size: clamp(17px, 1.6vw, 20px);
-  color: var(--ink-2);
+  color: #d9d4c8;
   max-width: 36ch;
 }
 .hero__ctas {
@@ -480,14 +503,14 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid #3a362e;
 }
 .hero__facts li {
   flex: 1 1 0;
   min-width: 120px;
   padding: 14px 16px 0 0;
   font-size: 14px;
-  color: var(--muted);
+  color: #b3ad9f;
 }
 .hero__facts strong {
   display: block;
@@ -495,7 +518,10 @@ textarea {
   font-size: 30px;
   line-height: 1.1;
   font-weight: 760;
-  color: var(--ink);
+  color: var(--gold-2);
+}
+.hero .btn--wa {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 .hero__bike {
   position: relative;
@@ -507,7 +533,8 @@ textarea {
   border-radius: var(--r-card);
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  background: var(--bg);
+  background: var(--night-2);
+  box-shadow: 0 0 0 1px #3a362e;
 }
 .hero__photo .vimg {
   width: 100%;
@@ -515,6 +542,7 @@ textarea {
   object-fit: cover;
 }
 .hero__tag {
+  color: var(--ink);
   position: absolute;
   left: clamp(-24px, -2vw, 0px);
   bottom: 0;
@@ -600,7 +628,7 @@ textarea {
   font-stretch: 62%;
   font-weight: 760;
   font-size: 22px;
-  color: var(--blue);
+  color: var(--accent);
 }
 @media (max-width: 1000px) {
   .cats {
@@ -689,7 +717,7 @@ textarea {
 .vcard__promo {
   left: auto;
   right: 10px;
-  background: var(--yellow);
+  background: var(--gold);
   color: var(--ink);
 }
 .vcard--off .vcard__media .vimg {
@@ -707,7 +735,7 @@ textarea {
 .vcard__cat {
   margin: 0;
   font-size: 13px;
-  color: var(--blue);
+  color: var(--accent);
   font-weight: 650;
 }
 .vcard__title {
@@ -748,7 +776,7 @@ textarea {
   width: 100%;
   height: 100%;
   background:
-    repeating-linear-gradient(-45deg, transparent 0 14px, rgba(31, 37, 44, 0.04) 14px 28px),
+    repeating-linear-gradient(-45deg, transparent 0 14px, rgba(22, 20, 15, 0.04) 14px 28px),
     var(--bg);
   color: var(--muted);
   font-size: 14px;
@@ -757,7 +785,7 @@ textarea {
 /* ---------- Ofertas (asfalto + faixa amarela) ---------- */
 .offers {
   position: relative;
-  background: var(--ink);
+  background: var(--night);
   color: #fff;
 }
 .offers::before {
@@ -766,15 +794,18 @@ textarea {
   top: 0;
   left: 0;
   right: 0;
-  height: 6px;
-  background: repeating-linear-gradient(90deg, var(--yellow) 0 48px, transparent 48px 80px);
+  height: 14px;
+  background: repeating-conic-gradient(#f3f2ef 0 25%, var(--ink) 0 50%) 0 0 / 14px 14px;
 }
 .offers .vcard {
   color: var(--ink);
   border-color: transparent;
 }
 .offers .vcard:hover {
-  border-color: var(--yellow);
+  border-color: var(--gold);
+}
+.offers .link--light {
+  color: var(--gold-2);
 }
 
 /* ---------- Como funciona ---------- */
@@ -801,8 +832,8 @@ textarea {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--blue);
-  color: var(--blue);
+  border: 2px solid var(--accent);
+  color: var(--accent);
   font-weight: 800;
   font-stretch: 62%;
   font-size: 22px;
@@ -865,7 +896,7 @@ textarea {
 .map__addr svg {
   flex: none;
   margin-top: 3px;
-  color: var(--blue);
+  color: var(--accent);
 }
 .map__hours {
   list-style: none;
@@ -953,14 +984,14 @@ textarea {
   place-items: center;
   width: 44px;
   height: 44px;
-  color: #b6bdc5;
+  color: #c4bfb4;
   transition: color 0.1s, transform 0.1s;
 }
 .review__pick:hover a {
   color: #f4b400;
 }
 .review__pick a:hover ~ a {
-  color: #b6bdc5;
+  color: #c4bfb4;
 }
 .review__pick a:hover svg {
   fill: currentColor;
@@ -1101,7 +1132,7 @@ textarea {
   width: 100%;
   min-height: 44px;
   padding: 9px 12px;
-  border: 1px solid #b9c1c9;
+  border: 1px solid #c2bcb0;
   border-radius: var(--r-ctl);
   background: #fff;
   font-weight: 400;
@@ -1116,7 +1147,7 @@ textarea {
 }
 .field input[type='range'] {
   width: 100%;
-  accent-color: var(--blue);
+  accent-color: var(--accent);
 }
 .check {
   display: flex;
@@ -1128,14 +1159,14 @@ textarea {
 .check input {
   width: 20px;
   height: 20px;
-  accent-color: var(--blue);
+  accent-color: var(--accent);
 }
 
 .notice {
   padding: 12px 14px;
   border-radius: var(--r-ctl);
-  background: var(--blue-soft);
-  color: var(--blue-ink);
+  background: var(--gold-soft);
+  color: var(--ink);
   font-size: 15px;
   margin: 0;
 }
@@ -1171,7 +1202,7 @@ textarea {
   margin-bottom: 18px;
 }
 .crumbs a {
-  color: var(--blue);
+  color: var(--accent);
 }
 .detail__grid {
   display: grid;
@@ -1208,7 +1239,7 @@ textarea {
   background: var(--bg);
 }
 .gallery__thumbs button.on {
-  border-color: var(--blue);
+  border-color: var(--accent);
 }
 .gallery__thumbs .vimg {
   width: 100%;
@@ -1398,8 +1429,8 @@ textarea {
 
 /* ---------- Rodapé ---------- */
 .footer {
-  background: var(--ink);
-  color: #d7dde3;
+  background: var(--night);
+  color: #d9d4c8;
   padding: 56px 0 24px;
 }
 .footer__grid {
@@ -1429,6 +1460,12 @@ textarea {
   font-weight: 650;
   color: #fff;
 }
+.footer__phone {
+  display: block;
+  margin-top: 6px;
+  font-weight: 500;
+  color: #d9d4c8;
+}
 .footer__social {
   display: flex;
   gap: 8px;
@@ -1440,7 +1477,7 @@ textarea {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid #47515c;
+  border: 1px solid #4a453b;
   color: #fff;
 }
 .footer__social a:hover {
@@ -1454,9 +1491,9 @@ textarea {
   gap: 8px;
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid #39424c;
+  border-top: 1px solid #3a362e;
   font-size: 13px;
-  color: #98a2ad;
+  color: #9d978a;
 }
 @media (max-width: 760px) {
   .footer__grid {
@@ -1492,10 +1529,19 @@ textarea {
 }
 .login {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   padding: 24px 16px;
-  background: var(--ink);
+  background: var(--night);
+}
+.login__logo {
+  height: 64px;
+  width: auto;
+  align-self: center;
+  margin-bottom: 8px;
 }
 .login__card {
   width: 100%;
@@ -1519,8 +1565,8 @@ textarea {
   min-height: 100vh;
 }
 .admin__side {
-  background: var(--ink);
-  color: #d7dde3;
+  background: var(--night);
+  color: #d9d4c8;
   display: flex;
   flex-direction: column;
   padding: 20px 14px;
@@ -1553,18 +1599,18 @@ textarea {
   font-size: 15px;
 }
 .admin__nav a:hover {
-  background: #2c343d;
+  background: #2b2822;
 }
 .admin__nav a.active {
-  background: var(--blue);
-  color: #fff;
+  background: var(--gold);
+  color: var(--ink);
 }
 .admin__foot {
   margin-top: auto;
   display: flex;
   justify-content: space-between;
   padding: 12px 8px 0;
-  border-top: 1px solid #39424c;
+  border-top: 1px solid #3a362e;
   font-size: 14px;
 }
 .admin__foot button {
@@ -1752,7 +1798,7 @@ textarea {
   border-radius: var(--r-ctl);
   border: 1px solid var(--line);
   background: #fff;
-  color: #9aa3ad;
+  color: #a39d91;
   cursor: pointer;
 }
 .icon-btn--on {
@@ -1876,7 +1922,7 @@ textarea {
   bottom: 0;
   display: flex;
   align-items: center;
-  background: rgba(31, 37, 44, 0.85);
+  background: rgba(22, 20, 15, 0.85);
   color: #fff;
   font-size: 13px;
 }
@@ -1899,13 +1945,13 @@ textarea {
 .aimg--add {
   display: grid;
   place-items: center;
-  border: 2px dashed #b9c1c9;
+  border: 2px dashed #c2bcb0;
   cursor: pointer;
-  color: var(--blue);
+  color: var(--accent);
   font-weight: 650;
 }
 .aimg--add:hover {
-  border-color: var(--blue);
+  border-color: var(--accent);
 }
 .aimg--add input {
   position: absolute;
@@ -1949,4 +1995,64 @@ textarea {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ---------- Serviços ---------- */
+.services {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0 24px;
+}
+.services__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px 28px;
+}
+.services__list li {
+  border-left: 3px solid var(--gold);
+  padding-left: 14px;
+}
+.services__t {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+.services__d {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.services__cta {
+  margin: 20px 0 0;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+@media (max-width: 1000px) {
+  .services__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .services__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.logo-edit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.logo-edit img {
+  height: 64px;
+  width: auto;
+  background: var(--night);
+  border-radius: 8px;
+  padding: 6px 10px;
 }

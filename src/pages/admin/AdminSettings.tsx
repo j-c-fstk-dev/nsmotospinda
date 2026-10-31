@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useSite } from '../../lib/SiteContext'
-import { saveSettings } from '../../lib/store'
+import { saveSettings, uploadImage } from '../../lib/store'
 import type { StoreSettings } from '../../lib/types'
 
 export default function AdminSettings() {
@@ -33,11 +33,35 @@ export default function AdminSettings() {
       </header>
       <form className="aform" onSubmit={submit}>
         <fieldset>
+          <legend>Logo</legend>
+          <div className="logo-edit">
+            <img src={s.logo_url || '/logo-ns.png'} alt="Logo atual" />
+            <label className="btn btn--ghost btn--sm">
+              Trocar logo
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={async (e) => {
+                  const f = e.target.files?.[0]
+                  if (f) set('logo_url', await uploadImage(f))
+                }}
+              />
+            </label>
+          </div>
+          <small className="muted">Use a versão com fundo preto ou transparente. Ela aparece no topo, no rodapé e no painel.</small>
+        </fieldset>
+
+        <fieldset>
           <legend>Contato</legend>
           <div className="aform__grid">
             <label className="field">
               <span>WhatsApp de vendas</span>
               <input value={s.whatsapp} placeholder="(12) 99999-9999" onChange={(e) => set('whatsapp', e.target.value)} />
+            </label>
+            <label className="field">
+              <span>Telefone fixo ou segundo número</span>
+              <input value={s.phone} placeholder="(12) 3333-3333" onChange={(e) => set('phone', e.target.value)} />
             </label>
             <label className="field">
               <span>Instagram (link)</span>

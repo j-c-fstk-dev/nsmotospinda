@@ -27,7 +27,7 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 3. **Google Perfil da Empresa:** no painel → *Google e avaliações*, colar o link "Pedir avaliações" (g.page/r/…/review), o link do perfil, nota e total. Baixar o QR code para o balcão.
 4. **Google Analytics 4:** criar propriedade, copiar o ID `G-…` e colar em *Dados da loja*. Eventos enviados: `page_view`, `click_whatsapp`, `view`, `review`.
 5. **Domínio:** Netlify → Domain management → adicionar domínio e apontar DNS.
-6. Trocar o WhatsApp de exemplo `(12) 99999-0000` pelo real em *Dados da loja*.
+6. Substituir o logo provisório (recortado de print do Instagram) pelo arquivo original em *Dados da loja → Logo*.
 
 ## Estrutura
 

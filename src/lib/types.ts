@@ -29,6 +29,7 @@ export interface Vehicle {
 
 export interface StoreSettings {
   store_name: string
+  logo_url: string
   tagline: string
   whatsapp: string
   phone: string

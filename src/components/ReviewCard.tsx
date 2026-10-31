@@ -13,7 +13,7 @@ export function reviewUrl(s: StoreSettings) {
 export function useQr(text: string, size = 220) {
   const [src, setSrc] = useState('')
   useEffect(() => {
-    QRCode.toDataURL(text, { width: size, margin: 1, color: { dark: '#1F252C', light: '#FFFFFF' } }).then(setSrc).catch(() => setSrc(''))
+    QRCode.toDataURL(text, { width: size, margin: 1, color: { dark: '#16140F', light: '#FFFFFF' } }).then(setSrc).catch(() => setSrc(''))
   }, [text, size])
   return src
 }

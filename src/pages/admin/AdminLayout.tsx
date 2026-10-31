@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { DEMO_MODE, isSignedIn, resetDemo, signOut } from '../../lib/store'
 import { useSite } from '../../lib/SiteContext'
-import { LogoMark } from '../../components/Logo'
+import { LogoImg } from '../../components/Logo'
 
 export default function AdminLayout() {
   const [state, setState] = useState<'checking' | 'in' | 'out'>('checking')
@@ -25,8 +25,7 @@ export default function AdminLayout() {
     <div className="admin">
       <aside className="admin__side">
         <div className="admin__brand">
-          <LogoMark size={28} />
-          <span>Painel</span>
+          <LogoImg height={40} />
         </div>
         <nav className="admin__nav" aria-label="Painel">
           <NavLink to="/admin" end>Resumo</NavLink>
