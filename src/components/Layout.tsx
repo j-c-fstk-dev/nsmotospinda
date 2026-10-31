@@ -48,6 +48,13 @@ export function Layout() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [hidden])
   const retracted = hidden && !peek && !open
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 480)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [pathname])
 
   const wa = waLink(settings, WA_GENERAL)
   const showBar = settings.announcement_enabled !== false && !!settings.announcement.trim()
@@ -143,7 +150,7 @@ export function Layout() {
         </div>
       </footer>
 
-      <a className="wa-fab" href={wa} target="_blank" rel="noopener" aria-label="Conversar no WhatsApp" onClick={() => track('whatsapp')}>
+      <a className={`wa-fab ${scrolled ? '' : 'wa-fab--wait'}`} href={wa} target="_blank" rel="noopener" aria-label="Conversar no WhatsApp" onClick={() => track('whatsapp')}>
         <WhatsAppIcon size={30} />
       </a>
     </>

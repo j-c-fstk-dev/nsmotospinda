@@ -2345,3 +2345,110 @@ textarea {
     grid-template-columns: 28px 72px minmax(0, 1fr);
   }
 }
+
+/* ---------- Ajustes de celular ---------- */
+@media (max-width: 900px) {
+  /* o menu horizontal do painel não pode alargar a página */
+  .admin {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin__side,
+  .admin__main {
+    min-width: 0;
+  }
+  .admin__foot a,
+  .admin__foot button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 4px;
+  }
+  .demo-bar {
+    padding: 10px 16px;
+  }
+  .demo-bar button {
+    min-height: 36px;
+  }
+  .aimg__bar button {
+    width: 40px;
+    height: 38px;
+  }
+  .admin__head .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .stock__bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .stock__bar .field--inline {
+    margin-left: auto;
+  }
+  .stock__bar .field--inline > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .stock__count {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+  }
+  .stock__filter-btn {
+    min-height: 46px;
+  }
+}
+/* áreas de toque confortáveis */
+.footer__link,
+.footer__phone {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.footer__phone {
+  display: flex;
+  margin-top: 0;
+}
+.field input[type='range'] {
+  height: 32px;
+}
+.row {
+  flex-wrap: wrap;
+}
+.row > input,
+.row > select {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* celular: barra fixa só depois que os botões principais saem da tela */
+@media (max-width: 900px) {
+  .sticky-cta {
+    transition: transform 0.4s var(--ease);
+  }
+  .sticky-cta--off {
+    transform: translateY(110%);
+  }
+  body:has(.sticky-cta) .wa-fab {
+    display: none;
+  }
+  /* botão flutuante aparece depois do primeiro scroll (o topo já tem o botão de WhatsApp) */
+  .wa-fab {
+    transition: transform 0.35s var(--ease), opacity 0.35s;
+  }
+  .wa-fab--wait {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+    pointer-events: none;
+  }
+  .aform__actions {
+    background: var(--ground);
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 12px var(--gutter);
+    box-shadow: 0 -10px 24px -18px rgba(0, 0, 0, 0.4);
+  }
+}

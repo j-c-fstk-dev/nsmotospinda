@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSite, usePageTitle } from '../lib/SiteContext'
 import { dateBR, effectivePrice, installment, isPromo, km, money, n, vehicleTitle, yearLabel } from '../lib/format'
@@ -21,6 +21,17 @@ export default function VehicleDetail() {
   const terms = settings.finance_terms?.length ? [...settings.finance_terms].sort((a, b) => a - b) : [12, 24, 36, 48]
   const [downPct, setDownPct] = useState(settings.finance_down_pct ?? 30)
   const [term, setTerm] = useState(terms[Math.floor((terms.length - 1) / 2)] ?? 36)
+
+  // A barra fixa do celular só aparece quando os botões principais saem da tela
+  const ctasRef = useRef<HTMLDivElement>(null)
+  const [ctasVisible, setCtasVisible] = useState(true)
+  useEffect(() => {
+    const el = ctasRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setCtasVisible(e.isIntersecting || e.boundingClientRect.top > window.innerHeight))
+    io.observe(el)
+    return () => io.disconnect()
+  })
 
   usePageTitle(v ? `${vehicleTitle(v)} ${yearLabel(v)}` : '')
 
@@ -101,7 +112,7 @@ export default function VehicleDetail() {
                   <Plate size="lg" price={price} from={promo ? v.price : null} promo={promo} band={promo ? v.promo_label || 'oferta' : 'à vista'} />
                   {promo && v.promo_until && <p className="muted" style={{ margin: '-8px 0 0', fontSize: 14 }}>Oferta válida até {dateBR(v.promo_until)}.</p>}
                   {v.status === 'reservado' && <p className="notice">Reservada no momento. Chame para entrar na fila caso a negociação não feche.</p>}
-                  <div className="detail__ctas">
+                  <div className="detail__ctas" ref={ctasRef}>
                     <a className="btn btn--primary btn--lg btn--block" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
                       <WhatsAppIcon size={20} className="wa-glyph" /> Tenho interesse
                     </a>
@@ -187,7 +198,7 @@ export default function VehicleDetail() {
       )}
 
       {!sold && (
-        <div className="sticky-cta">
+        <div className={`sticky-cta ${ctasVisible ? 'sticky-cta--off' : ''}`} aria-hidden={ctasVisible}>
           <div>
             <span className="sticky-cta__name">{v.model}</span>
             <strong>{money(price)}</strong>
