@@ -179,11 +179,7 @@ export default function AdminSettings() {
         </fieldset>
 
         <fieldset>
-          <legend>Textos</legend>
-          <label className="field">
-            <span>Texto da garantia</span>
-            <textarea rows={2} value={s.warranty_text} onChange={(e) => set('warranty_text', e.target.value)} />
-          </label>
+          <legend>Google Analytics</legend>
           <div className="aform__grid">
             <label className="field">
               <span>Google Analytics (ID)</span>

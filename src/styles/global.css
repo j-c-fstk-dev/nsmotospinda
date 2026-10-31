@@ -2493,3 +2493,7 @@ textarea {
     padding-top: 0;
   }
 }
+
+.aform__grid--wide {
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+}

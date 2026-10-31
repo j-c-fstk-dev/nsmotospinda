@@ -11,18 +11,6 @@ import { ReviewCard } from '../components/ReviewCard'
 import { MapFrame, VisitInfo } from '../components/MapBlock'
 import { WhatsAppIcon } from '../components/Icons'
 
-// Serviços como aparecem no material da própria loja
-const SERVICES = [
-  { t: 'Motos seminovas e usadas', d: 'Todas as marcas e cilindradas, revisadas antes de sair do pátio.' },
-  { t: 'Carros seminovos e usados', d: 'Também trabalhamos com carros. Pergunte o que tem disponível.' },
-  { t: 'Financiamento facilitado', d: 'Simulação com os principais bancos e entrada parcelada no cartão.' },
-  { t: 'Troca com avaliação na hora', d: 'Sua moto ou carro entra como parte do pagamento.' },
-  { t: 'Consórcio', d: 'Planeje a próxima moto sem os juros do financiamento.' },
-  { t: 'Consignação', d: 'Deixe seu veículo com a gente e vendemos com segurança e transparência.' },
-]
-
-const WA_CONSIGN = 'Olá! Quero vender minha moto/carro. Como funciona a consignação na NS Multimarcas?'
-
 function ArrowIcon({ dir }: { dir: 'left' | 'right' }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -41,6 +29,7 @@ export default function Home() {
   const hero = featured.find((v) => v.status === 'disponivel') ?? available[0]
   const wa = waLink(settings, WA_GENERAL)
   const steps = (settings.how_steps ?? []).filter((s) => s.title.trim())
+  const services = (settings.services_items ?? []).filter((s) => s.title.trim())
   const strip = useRef<HTMLUListElement>(null)
   const scroll = (d: number) => strip.current?.scrollBy({ left: d * strip.current.clientWidth * 0.8, behavior: 'smooth' })
 
@@ -69,13 +58,11 @@ export default function Home() {
           <VehicleImage src={hero?.images[0]} alt={hero ? `${vehicleTitle(hero)} ${yearLabel(hero)}` : ''} eager />
         </div>
         <div className="wrap hero__inner">
-          <h1 className="display hero__title">Moto revisada e com garantia.</h1>
-          <p className="hero__lead">
-            A NS Multimarcas fica no centro de Pindamonhangaba. Avaliamos a sua na troca e financiamos com entrada no cartão.
-          </p>
+          <h1 className="display hero__title">{settings.hero_title}</h1>
+          {settings.hero_lead && <p className="hero__lead">{settings.hero_lead}</p>}
           <div className="hero__ctas">
             <Link to="/estoque" className="btn btn--primary btn--lg">
-              Ver motos à venda
+              {settings.hero_cta_label || 'Ver motos à venda'}
             </Link>
             <a className="btn btn--line btn--lg" href={wa} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
               <WhatsAppIcon size={20} className="wa-glyph" /> Chamar no WhatsApp
@@ -97,22 +84,23 @@ export default function Home() {
         <div className="floor" aria-hidden="true" />
       </section>
 
+      {settings.services_enabled !== false && services.length > 0 && (
       <section className="services" aria-labelledby="serv-h">
         <div className="wrap services__grid">
           <div className="services__intro">
             <h2 id="serv-h" className="section__title services__title">
-              Compra, venda, troca e financiamento.
+              {settings.services_title}
             </h2>
-            <p>{settings.warranty_text}</p>
+            {settings.warranty_text && <p>{settings.warranty_text}</p>}
           </div>
           <ul className="services__list">
-            {SERVICES.map((s, i) => (
-              <li key={s.t}>
-                <h3 className="services__t">{s.t}</h3>
-                <p className="services__d">{s.d}</p>
-                {i === SERVICES.length - 1 && (
-                  <a className="link" href={waLink(settings, WA_CONSIGN)} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
-                    Quero vender a minha
+            {services.map((s, i) => (
+              <li key={i}>
+                <h3 className="services__t">{s.title}</h3>
+                {s.text && <p className="services__d">{s.text}</p>}
+                {i === services.length - 1 && settings.services_cta_label && (
+                  <a className="link" href={waLink(settings, settings.services_cta_message || WA_GENERAL)} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
+                    {settings.services_cta_label}
                   </a>
                 )}
               </li>
@@ -120,15 +108,16 @@ export default function Home() {
           </ul>
         </div>
       </section>
+      )}
 
       {cats.length > 0 && (
         <section className="section cats-sec" aria-labelledby="cat-h">
           <div className="wrap section__head">
             <div>
               <h2 id="cat-h" className="section__title">
-                Qual é o seu estilo?
+                {settings.cats_title}
               </h2>
-              <p>Do dia a dia na cidade à viagem pela Serra da Mantiqueira.</p>
+              {settings.cats_text && <p>{settings.cats_text}</p>}
             </div>
             <div className="cats-nav">
               <button onClick={() => scroll(-1)} aria-label="Categorias anteriores">
@@ -165,7 +154,7 @@ export default function Home() {
           <div className="wrap">
             <div className="section__head">
               <h2 id="dest-h" className="section__title">
-                Destaques do pátio
+                {settings.featured_title}
               </h2>
               <Link to="/estoque" className="link">
                 Ver estoque completo
@@ -187,9 +176,9 @@ export default function Home() {
             <div className="section__head">
               <div>
                 <h2 id="of-h" className="section__title">
-                  Baixou o preço
+                  {settings.offers_title}
                 </h2>
-                <p>Ofertas por tempo limitado ou até acabar o estoque.</p>
+                {settings.offers_text && <p>{settings.offers_text}</p>}
               </div>
               <Link to="/estoque?ofertas=1" className="link link--light">
                 Todas as ofertas
@@ -230,7 +219,7 @@ export default function Home() {
           <MapFrame settings={settings} />
           <div>
             <h2 id="loja-h" className="section__title">
-              Venha ver de perto
+              {settings.visit_title}
             </h2>
             <VisitInfo settings={settings} />
             <ReviewCard settings={settings} />

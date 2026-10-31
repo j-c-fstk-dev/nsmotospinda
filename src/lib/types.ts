@@ -45,7 +45,23 @@ export interface HowStep {
   text: string
 }
 
+export type TextItem = HowStep
+
 export interface StoreSettings {
+  hero_title: string
+  hero_lead: string
+  hero_cta_label: string
+  services_enabled: boolean
+  services_title: string
+  services_items: TextItem[]
+  services_cta_label: string
+  services_cta_message: string
+  cats_title: string
+  cats_text: string
+  featured_title: string
+  offers_title: string
+  offers_text: string
+  visit_title: string
   how_enabled: boolean
   how_title: string
   how_lead: string
