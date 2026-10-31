@@ -684,16 +684,102 @@ textarea {
 .cats-sec {
   background: var(--paper);
 }
-.cats-nav {
-  display: flex;
-  gap: 8px;
+/* carrossel: grupos de 3 / 2 / 1 que trocam e PARAM */
+.carousel {
+  --per: 3;
+  --gap: clamp(16px, 2vw, 28px);
 }
-@media (max-width: 700px) {
-  .cats-nav {
-    display: none;
+.cats {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 4px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+  column-gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.cats::-webkit-scrollbar {
+  display: none;
+}
+.cats li {
+  scroll-snap-align: start;
+}
+.carousel .cat__img {
+  aspect-ratio: 5 / 6;
+}
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+.carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* área de toque de 32px, traço visível fino */
+.carousel__dot {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.carousel__dot::before,
+.carousel__fill {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: rgba(22, 20, 15, 0.18);
+  transition: background-color 0.2s;
+}
+.carousel__dot:hover::before {
+  background: rgba(22, 20, 15, 0.45);
+}
+.carousel__dot--on {
+  width: 56px;
+}
+.carousel__dot--on::before {
+  background: rgba(22, 20, 15, 0.18);
+}
+.carousel__fill {
+  background: var(--ink);
+  transform-origin: left;
+  transform: scaleX(1);
+}
+.carousel__dot:not(.carousel__dot--on) .carousel__fill {
+  display: none;
+}
+/* o traço ativo enche durante o tempo parado: mostra que vai trocar */
+.carousel--running .carousel__dot--on .carousel__fill {
+  animation: carousel-fill var(--interval) linear both;
+}
+.carousel:not(.carousel--running) .carousel__dot--on .carousel__fill {
+  animation: none;
+}
+@keyframes carousel-fill {
+  from {
+    transform: scaleX(0);
   }
 }
-.cats-nav button {
+.carousel__arrows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.carousel__arrows button {
   display: grid;
   place-items: center;
   width: 48px;
@@ -701,34 +787,24 @@ textarea {
   border: 1px solid rgba(22, 20, 15, 0.22);
   border-radius: 50%;
   background: transparent;
+  color: var(--ink);
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
 }
-.cats-nav button:hover {
+.carousel__arrows button:hover {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--on-dark);
 }
-.cats {
-  list-style: none;
-  margin: 0;
-  padding: 0 var(--gutter) 8px;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: clamp(220px, 23vw, 300px);
-  gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 0 var(--gutter);
-  scrollbar-width: none;
-  max-width: calc(var(--wrap) + 0px);
-  margin: 0 auto;
+.carousel__arrows .carousel__pause {
+  width: 40px;
+  height: 40px;
+  border-color: transparent;
 }
-.cats::-webkit-scrollbar {
-  display: none;
-}
-.cats li {
-  scroll-snap-align: start;
+@media (max-width: 599px) {
+  .carousel .cat__img {
+    aspect-ratio: 4 / 3;
+  }
 }
 .cat {
   display: block;
@@ -2496,4 +2572,34 @@ textarea {
 
 .aform__grid--wide {
   grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+}
+@media (max-width: 599px) {
+  /* no celular a troca é no dedo; ficam os pontos e o botão de pausa */
+  .carousel__arrows button:not(.carousel__pause) {
+    display: none;
+  }
+}
+.section__head {
+  flex-wrap: wrap;
+}
+.section__head > .link {
+  white-space: nowrap;
+}
+@media (max-width: 599px) {
+  /* deixa o canto direito livre para o botão flutuante do WhatsApp */
+  .carousel__controls {
+    justify-content: flex-start;
+    padding-right: 76px;
+  }
+  .carousel__dot {
+    width: 26px;
+  }
+  .carousel__dot--on {
+    width: 44px;
+  }
+}
+
+.login__alt {
+  align-self: center;
+  font-size: 15px;
 }

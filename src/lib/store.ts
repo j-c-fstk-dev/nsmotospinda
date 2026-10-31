@@ -177,6 +177,42 @@ export async function isSignedIn(): Promise<boolean> {
   return sessionStorage.getItem(K.session) === '1'
 }
 
+// ---------- Senha ----------
+export const MIN_PASSWORD = 10
+export const RESET_PATH = '/admin/nova-senha'
+
+/**
+ * Pede o e-mail de redefinição. Usa o envio de e-mail do próprio Supabase
+ * (sem serviço extra). A resposta é sempre a mesma, exista o e-mail ou não,
+ * para ninguém descobrir qual é o e-mail do administrador.
+ */
+export async function requestPasswordReset(email: string) {
+  if (!supabase) throw new Error('Na demonstração a senha é fixa. A recuperação funciona depois de ligar o banco de dados.')
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}${RESET_PATH}` })
+  // limite de envios: o único erro que vale mostrar (não revela se o e-mail existe)
+  if (error && (error.status === 429 || /rate|limit/i.test(error.message))) {
+    throw new Error('Muitos pedidos seguidos. Aguarde alguns minutos e tente de novo.')
+  }
+}
+
+/** Confere a senha atual (troca de senha estando logado) */
+export async function verifyCurrentPassword(password: string) {
+  if (!supabase) return password === DEMO_LOGIN.password
+  const email = (await supabase.auth.getUser()).data.user?.email
+  if (!email) return false
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  return !error
+}
+
+export async function updatePassword(password: string) {
+  if (!supabase) throw new Error('Na demonstração a senha é fixa.')
+  if (password.length < MIN_PASSWORD) throw new Error(`Use pelo menos ${MIN_PASSWORD} caracteres.`)
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) throw new Error(/same|different/i.test(error.message) ? 'A senha nova precisa ser diferente da atual.' : 'Não foi possível trocar a senha. Peça um novo link.')
+  // encerra sessões abertas em outros aparelhos
+  await supabase.auth.signOut({ scope: 'others' }).catch(() => {})
+}
+
 export function resetDemo() {
   localStorage.removeItem(K.vehicles)
   localStorage.removeItem(K.settings)

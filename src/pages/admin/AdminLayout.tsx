@@ -40,6 +40,7 @@ export default function AdminLayout() {
         </nav>
         <div className="admin__foot">
           <a href="/" target="_blank" rel="noopener">Ver site</a>
+          {!DEMO_MODE && <NavLink to="/admin/nova-senha">Trocar senha</NavLink>}
           <button
             onClick={async () => {
               await signOut()

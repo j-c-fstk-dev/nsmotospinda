@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound'
 
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminNewPassword = lazy(() => import('./pages/admin/AdminNewPassword'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminVehicles = lazy(() => import('./pages/admin/AdminVehicles'))
 const AdminVehicleForm = lazy(() => import('./pages/admin/AdminVehicleForm'))
@@ -32,6 +33,7 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="admin/login" element={<AdminLogin />} />
+            <Route path="admin/nova-senha" element={<AdminNewPassword />} />
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="veiculos" element={<AdminVehicles />} />

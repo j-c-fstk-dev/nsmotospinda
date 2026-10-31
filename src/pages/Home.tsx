@@ -1,24 +1,16 @@
 import { Link } from 'react-router-dom'
-import { useRef } from 'react'
 import { useSite, usePageTitle } from '../lib/SiteContext'
 import { effectivePrice, isPromo, vehicleTitle, yearLabel, km } from '../lib/format'
 import { waLink, WA_GENERAL } from '../lib/whatsapp'
 import { track, byFeaturedRank } from '../lib/store'
 import { VehicleCard } from '../components/VehicleCard'
+import { CategoryCarousel } from '../components/CategoryCarousel'
 import { vehiclePath } from '../lib/words'
 import { VehicleImage } from '../components/VehicleImage'
 import { Plate } from '../components/Plate'
 import { ReviewCard } from '../components/ReviewCard'
 import { MapFrame, VisitInfo } from '../components/MapBlock'
 import { WhatsAppIcon } from '../components/Icons'
-
-function ArrowIcon({ dir }: { dir: 'left' | 'right' }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-      {dir === 'left' ? <path d="M15 5l-7 7 7 7" /> : <path d="M9 5l7 7-7 7" />}
-    </svg>
-  )
-}
 
 export default function Home() {
   usePageTitle('')
@@ -31,8 +23,6 @@ export default function Home() {
   const wa = waLink(settings, WA_GENERAL)
   const steps = (settings.how_steps ?? []).filter((s) => s.title.trim())
   const services = (settings.services_items ?? []).filter((s) => s.title.trim())
-  const strip = useRef<HTMLUListElement>(null)
-  const scroll = (d: number) => strip.current?.scrollBy({ left: d * strip.current.clientWidth * 0.8, behavior: 'smooth' })
 
   const cats = categories
     .filter((c) => c.visible)
@@ -120,33 +110,13 @@ export default function Home() {
               </h2>
               {settings.cats_text && <p>{settings.cats_text}</p>}
             </div>
-            <div className="cats-nav">
-              <button onClick={() => scroll(-1)} aria-label="Categorias anteriores">
-                <ArrowIcon dir="left" />
-              </button>
-              <button onClick={() => scroll(1)} aria-label="Próximas categorias">
-                <ArrowIcon dir="right" />
-              </button>
-            </div>
+            <Link to="/estoque" className="link">
+              Ver todas
+            </Link>
           </div>
-          <ul className="cats" ref={strip}>
-            {cats.map(({ c, list }) => (
-              <li key={c.id}>
-                <Link to={`/estoque?categoria=${c.id}`} className="cat">
-                  <div className="cat__img">
-                    <VehicleImage src={list.find((v) => v.images[0])?.images[0]} alt="" />
-                  </div>
-                  <div className="cat__row">
-                    <span className="cat__name">{c.name}</span>
-                    <span className="cat__count">
-                      {list.length} {list.length === 1 ? 'disponível' : 'disponíveis'}
-                    </span>
-                  </div>
-                  <span className="cat__short">{c.short}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="wrap">
+            <CategoryCarousel items={cats} />
+          </div>
         </section>
       )}
 

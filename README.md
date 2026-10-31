@@ -23,6 +23,8 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 ## Checklist para quando o cliente fechar
 
 1. **Supabase:** criar projeto → SQL Editor → rodar `supabase/schema.sql` → Authentication → Users → criar o usuário do lojista (e-mail + senha). Desativar "Allow new users to sign up".
+   - **Recuperação de senha** (usa o e-mail do próprio Supabase, sem serviço extra): em Authentication → URL Configuration, colocar o domínio em *Site URL* e adicionar `https://SEU-DOMINIO/admin/nova-senha` (e o endereço do Netlify) em *Redirect URLs*. Opcional: traduzir o modelo "Reset Password" em Authentication → Email Templates.
+   - O e-mail embutido do Supabase tem limite de poucos envios por hora. Para um único administrador basta; se um dia precisar de mais, dá para configurar um SMTP próprio no mesmo painel.
 2. **Variáveis no Netlify** (acima) e redeploy. Cadastrar o estoque real pelo painel (`/admin`).
 3. **Google Perfil da Empresa:** no painel → *Google e avaliações*, colar o link "Pedir avaliações" (g.page/r/…/review), o link do perfil, nota e total. Baixar o QR code para o balcão.
 4. **Google Analytics 4:** criar propriedade, copiar o ID `G-…` e colar em *Dados da loja*. Eventos enviados: `page_view`, `click_whatsapp`, `view`, `review`.
@@ -38,6 +40,12 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 - **Categorias:** renomear, mudar subtítulo/descrição, reordenar, esconder (some do site junto com os veículos dela), criar e excluir (só vazias).
 - **Dados da loja:** logo, WhatsApp, telefone, endereço, horário, faixa de aviso, taxa do simulador, Google Analytics.
 - **Google e avaliações:** link de avaliação, perfil, nota e QR code para o balcão.
+
+## Senha do painel
+
+- **Esqueci minha senha** (tela de login): envia um link de uso único que vale 1 hora e volta para `/admin/nova-senha`. A resposta é a mesma exista o e-mail ou não. O botão de reenviar espera 60 s.
+- **Trocar senha** (rodapé do menu do painel, logado): pede a senha atual.
+- Senha nova com no mínimo 10 caracteres. Ao trocar, as sessões abertas em outros aparelhos são encerradas.
 
 ## Estrutura
 
