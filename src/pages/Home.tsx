@@ -23,13 +23,6 @@ const SERVICES = [
 
 const WA_CONSIGN = 'Olá! Quero vender minha moto/carro. Como funciona a consignação na NS Multimarcas?'
 
-const STEPS = [
-  { t: 'Escolha a moto', d: 'Pelo site ou ao vivo, no pátio da Rua Doutor Campos Salles.' },
-  { t: 'Traga a sua na troca', d: 'Avaliamos na hora e o valor entra como parte do pagamento.' },
-  { t: 'Monte o pagamento', d: 'Financiamento, entrada no cartão ou à vista. A gente simula com você.' },
-  { t: 'Saia rodando', d: 'Revisada, com documentação conferida e garantia de motor e câmbio.' },
-]
-
 function ArrowIcon({ dir }: { dir: 'left' | 'right' }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -47,6 +40,7 @@ export default function Home() {
   const offers = available.filter((v) => isPromo(v)).slice(0, 4)
   const hero = featured.find((v) => v.status === 'disponivel') ?? available[0]
   const wa = waLink(settings, WA_GENERAL)
+  const steps = (settings.how_steps ?? []).filter((s) => s.title.trim())
   const strip = useRef<HTMLUListElement>(null)
   const scroll = (d: number) => strip.current?.scrollBy({ left: d * strip.current.clientWidth * 0.8, behavior: 'smooth' })
 
@@ -210,24 +204,26 @@ export default function Home() {
         </section>
       )}
 
-      <section className="section how-sec" id="como-comprar" aria-labelledby="como-h">
-        <div className="wrap how">
-          <div>
-            <h2 id="como-h" className="section__title">
-              Como funciona a compra
-            </h2>
-            <p className="how__lead">Do primeiro contato à chave na mão, sem burocracia e com a documentação conferida pela loja.</p>
+      {settings.how_enabled !== false && steps.length > 0 && (
+        <section className="section how-sec" id="como-comprar" aria-labelledby="como-h">
+          <div className="wrap how">
+            <div>
+              <h2 id="como-h" className="section__title">
+                {settings.how_title || 'Como funciona a compra'}
+              </h2>
+              {settings.how_lead && <p className="how__lead">{settings.how_lead}</p>}
+            </div>
+            <ol className="steps">
+              {steps.map((s, i) => (
+                <li key={i} className="step">
+                  <h3 className="step__t">{s.title}</h3>
+                  {s.text && <p className="step__d">{s.text}</p>}
+                </li>
+              ))}
+            </ol>
           </div>
-          <ol className="steps">
-            {STEPS.map((s) => (
-              <li key={s.t} className="step">
-                <h3 className="step__t">{s.t}</h3>
-                <p className="step__d">{s.d}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="section" id="loja" aria-labelledby="loja-h">
         <div className="wrap visit">

@@ -16,6 +16,7 @@ const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
 const AdminGoogle = lazy(() => import('./pages/admin/AdminGoogle'))
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'))
 const AdminFeatured = lazy(() => import('./pages/admin/AdminFeatured'))
+const AdminHome = lazy(() => import('./pages/admin/AdminHome'))
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="veiculos/novo" element={<AdminVehicleForm key="novo" />} />
               <Route path="veiculos/:id" element={<AdminVehicleForm />} />
               <Route path="destaques" element={<AdminFeatured />} />
+              <Route path="pagina-inicial" element={<AdminHome />} />
               <Route path="categorias" element={<AdminCategories />} />
               <Route path="loja" element={<AdminSettings />} />
               <Route path="google" element={<AdminGoogle />} />

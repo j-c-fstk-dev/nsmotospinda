@@ -86,7 +86,7 @@ export function Layout() {
           <Logo />
           <nav className={`nav ${open ? 'nav--open' : ''}`} aria-label="Principal">
             <NavLink to="/estoque">Estoque</NavLink>
-            <a href="/#como-comprar">Como comprar</a>
+            {settings.how_enabled !== false && settings.how_steps?.length > 0 && <a href="/#como-comprar">Como comprar</a>}
             <a href="/#loja">Onde estamos</a>
             <a className="btn btn--line nav__wa" href={wa} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
               <WhatsAppIcon size={18} className="wa-glyph" /> WhatsApp

@@ -72,6 +72,15 @@ export const SEED_VEHICLES: Vehicle[] = raw.map((r, i) => {
 export const DEFAULT_SETTINGS: StoreSettings = {
   store_name: 'NS Multimarcas',
   categories: DEFAULT_CATEGORIES,
+  how_enabled: true,
+  how_title: 'Como funciona a compra',
+  how_lead: 'Do primeiro contato à chave na mão, sem burocracia e com a documentação conferida pela loja.',
+  how_steps: [
+    { title: 'Escolha a moto', text: 'Pelo site ou ao vivo, no pátio da Rua Doutor Campos Salles.' },
+    { title: 'Traga a sua na troca', text: 'Avaliamos na hora e o valor entra como parte do pagamento.' },
+    { title: 'Monte o pagamento', text: 'Financiamento, entrada no cartão ou à vista. A gente simula com você.' },
+    { title: 'Saia rodando', text: 'Revisada, com documentação conferida e garantia de motor e câmbio.' },
+  ],
   logo_url: '/emblem-ns.png',
   tagline: 'Veículos, motos, consórcio e financiamento em Pindamonhangaba',
   whatsapp: '(11) 94150-8677',

@@ -40,7 +40,16 @@ export interface Category {
   visible: boolean
 }
 
+export interface HowStep {
+  title: string
+  text: string
+}
+
 export interface StoreSettings {
+  how_enabled: boolean
+  how_title: string
+  how_lead: string
+  how_steps: HowStep[]
   categories: Category[]
   store_name: string
   logo_url: string

@@ -34,6 +34,7 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 - **Veículos:** cadastrar, editar, excluir, marcar destaque (estrela), esconder/mostrar no site (olho), situação disponível/reservada/vendida. Filtros por situação, ofertas e escondidos.
 - **Ofertas:** no cadastro do veículo, "Preço de oferta" + "Selo" (ex.: Baixou) + "Válida até" (opcional; vence sozinha). O site mostra o preço antigo riscado, a placa dourada e a seção "Baixou o preço".
 - **Destaques:** escolher quais motos aparecem e em que ordem. O primeiro é a foto do topo do site e o card grande.
+- **Página inicial:** editar a seção "Como funciona a compra" (título, texto, etapas, ordem, mostrar/esconder).
 - **Categorias:** renomear, mudar subtítulo/descrição, reordenar, esconder (some do site junto com os veículos dela), criar e excluir (só vazias).
 - **Dados da loja:** logo, WhatsApp, telefone, endereço, horário, faixa de aviso, taxa do simulador, Google Analytics.
 - **Google e avaliações:** link de avaliação, perfil, nota e QR code para o balcão.
