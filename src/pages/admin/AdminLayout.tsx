@@ -32,6 +32,7 @@ export default function AdminLayout() {
           <NavLink to="/admin" end>Resumo</NavLink>
           <NavLink to="/admin/veiculos" end>Veículos</NavLink>
           <NavLink to="/admin/veiculos/novo">Cadastrar veículo</NavLink>
+          <NavLink to="/admin/destaques">Destaques</NavLink>
           <NavLink to="/admin/categorias">Categorias</NavLink>
           <NavLink to="/admin/loja">Dados da loja</NavLink>
           <NavLink to="/admin/google">Google e avaliações</NavLink>

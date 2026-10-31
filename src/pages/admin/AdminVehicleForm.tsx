@@ -29,6 +29,7 @@ const EMPTY: Vehicle = {
   images: [],
   image_credit: '',
   featured: false,
+  featured_rank: 999,
   hidden: false,
   promo_until: '',
   status: 'disponivel',
@@ -227,7 +228,7 @@ export default function AdminVehicleForm() {
           </div>
           <div className="aform__checks">
             <label className="check">
-              <input type="checkbox" checked={v.featured} onChange={(e) => set('featured', e.target.checked)} />
+              <input type="checkbox" checked={v.featured} onChange={(e) => setV((p) => ({ ...p, featured: e.target.checked, featured_rank: e.target.checked && !p.featured ? Math.max(-1, ...vehicles.filter((x) => x.featured).map((x) => x.featured_rank)) + 1 : p.featured_rank }))} />
               <span>Mostrar nos destaques da página inicial</span>
             </label>
             <label className="check">

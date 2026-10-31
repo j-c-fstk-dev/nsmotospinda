@@ -12,6 +12,7 @@ export default function AdminVehicles() {
   const [q, setQ] = useState('')
   const [status, setStatus] = useState<'' | VehicleStatus | 'oferta' | 'oculto'>('')
   const [msg, setMsg] = useState('')
+  const nextRank = Math.max(-1, ...vehicles.filter((x) => x.featured).map((x) => x.featured_rank)) + 1
 
   const list = useMemo(() => {
     const t = q.toLowerCase()
@@ -86,7 +87,7 @@ export default function AdminVehicles() {
                 className={`icon-btn ${v.featured ? 'icon-btn--on' : ''}`}
                 aria-pressed={v.featured}
                 title={v.featured ? 'Tirar dos destaques' : 'Colocar nos destaques'}
-                onClick={() => patch(v, { featured: !v.featured }, v.featured ? 'Removido dos destaques.' : 'Adicionado aos destaques.')}
+                onClick={() => patch(v, { featured: !v.featured, featured_rank: v.featured ? v.featured_rank : nextRank }, v.featured ? 'Removido dos destaques.' : 'Adicionado aos destaques.')}
               >
                 <StarIcon size={18} filled={v.featured} />
                 <span className="sr-only">Destaque</span>

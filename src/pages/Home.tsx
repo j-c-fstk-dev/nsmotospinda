@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { useSite, usePageTitle } from '../lib/SiteContext'
 import { effectivePrice, isPromo, vehicleTitle, yearLabel, km } from '../lib/format'
 import { waLink, WA_GENERAL } from '../lib/whatsapp'
-import { track } from '../lib/store'
+import { track, byFeaturedRank } from '../lib/store'
 import { VehicleCard } from '../components/VehicleCard'
 import { VehicleImage } from '../components/VehicleImage'
 import { Plate } from '../components/Plate'
@@ -41,7 +41,7 @@ function ArrowIcon({ dir }: { dir: 'left' | 'right' }) {
 export default function Home() {
   usePageTitle('')
   const { publicVehicles: available, settings, categories } = useSite()
-  const featured = available.filter((v) => v.featured).slice(0, 6)
+  const featured = available.filter((v) => v.featured).sort(byFeaturedRank).slice(0, 6)
   // o destaque grande só fecha a grade com 3 ou 6 itens
   const lead = featured.length === 3 || featured.length === 6
   const offers = available.filter((v) => isPromo(v)).slice(0, 4)

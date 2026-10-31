@@ -29,7 +29,7 @@ const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() +
 
 // ---------- Veículos ----------
 // Garante campos novos em dados salvos por versões anteriores
-const normalize = (v: Vehicle): Vehicle => ({ ...v, hidden: v.hidden ?? false, promo_until: v.promo_until ?? '', features: v.features ?? [], images: v.images ?? [] })
+const normalize = (v: Vehicle): Vehicle => ({ ...v, featured_rank: v.featured_rank ?? 999, hidden: v.hidden ?? false, promo_until: v.promo_until ?? '', features: v.features ?? [], images: v.images ?? [] })
 
 export async function listVehicles(): Promise<Vehicle[]> {
   if (supabase) {
@@ -184,3 +184,17 @@ export function resetDemo() {
 }
 
 export { DEMO_MODE }
+
+/** Ordem dos destaques: grava a posição de cada um */
+export async function saveFeaturedOrder(ordered: Vehicle[]) {
+  const updated = ordered.map((v, i) => ({ ...v, featured: true, featured_rank: i }))
+  if (supabase) {
+    const { error } = await supabase.from('vehicles').upsert(updated)
+    if (error) throw error
+    return
+  }
+  const map = new Map(updated.map((v) => [v.id, v]))
+  writeLS(K.vehicles, (await listVehicles()).map((v) => map.get(v.id) ?? v))
+}
+
+export const byFeaturedRank = (a: Vehicle, b: Vehicle) => a.featured_rank - b.featured_rank || b.created_at.localeCompare(a.created_at)

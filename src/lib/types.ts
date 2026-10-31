@@ -23,6 +23,8 @@ export interface Vehicle {
   images: string[]
   image_credit: string
   featured: boolean
+  /** posição nos destaques (menor aparece primeiro) */
+  featured_rank: number
   hidden: boolean
   promo_until: string
   status: VehicleStatus

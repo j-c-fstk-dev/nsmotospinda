@@ -22,6 +22,7 @@ create table if not exists public.vehicles (
   images text[] not null default '{}',
   image_credit text not null default '',
   featured boolean not null default false,
+  featured_rank int not null default 999,
   hidden boolean not null default false,
   promo_until text not null default '',
   status text not null default 'disponivel' check (status in ('disponivel','reservado','vendido')),
@@ -30,6 +31,7 @@ create table if not exists public.vehicles (
 create index if not exists vehicles_status_idx on public.vehicles (status);
 
 -- Para bancos criados com a versão anterior deste arquivo:
+alter table public.vehicles add column if not exists featured_rank int not null default 999;
 alter table public.vehicles add column if not exists hidden boolean not null default false;
 alter table public.vehicles add column if not exists promo_until text not null default '';
 

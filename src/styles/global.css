@@ -2305,3 +2305,29 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+.flist {
+  counter-reset: none;
+}
+.frow {
+  grid-template-columns: 28px 96px minmax(0, 1fr) auto;
+}
+.frow__pos {
+  font-stretch: 62%;
+  font-weight: 760;
+  font-size: 24px;
+  text-align: center;
+  color: var(--accent);
+}
+.frow--out {
+  opacity: 0.6;
+}
+.icon-btn:disabled,
+.btn--sm:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+@media (max-width: 900px) {
+  .frow {
+    grid-template-columns: 28px 72px minmax(0, 1fr);
+  }
+}

@@ -7,7 +7,7 @@ import { DEFAULT_CATEGORIES } from './categories'
 const commons = (file: string) =>
   `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1280`
 
-type SeedInput = Omit<Vehicle, 'id' | 'slug' | 'created_at' | 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'type' | 'fuel' | 'description' | 'version' | 'hidden' | 'promo_until'> &
+type SeedInput = Omit<Vehicle, 'id' | 'slug' | 'created_at' | 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'type' | 'fuel' | 'description' | 'version' | 'hidden' | 'promo_until' | 'featured_rank'> &
   Partial<Pick<Vehicle, 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'fuel' | 'description' | 'version'>>
 
 const BASE_FEATURES = ['Revisada na loja', 'Garantia de 90 dias', 'Documentação em dia', 'Manual e chave reserva']
@@ -60,6 +60,7 @@ export const SEED_VEHICLES: Vehicle[] = raw.map((r, i) => {
     promo_price: null,
     promo_label: '',
     featured: false,
+    featured_rank: i,
     hidden: false,
     promo_until: '',
     status: 'disponivel',
