@@ -14,6 +14,7 @@ const AdminVehicles = lazy(() => import('./pages/admin/AdminVehicles'))
 const AdminVehicleForm = lazy(() => import('./pages/admin/AdminVehicleForm'))
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
 const AdminGoogle = lazy(() => import('./pages/admin/AdminGoogle'))
+const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'))
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="veiculos" element={<AdminVehicles />} />
               <Route path="veiculos/novo" element={<AdminVehicleForm key="novo" />} />
               <Route path="veiculos/:id" element={<AdminVehicleForm />} />
+              <Route path="categorias" element={<AdminCategories />} />
               <Route path="loja" element={<AdminSettings />} />
               <Route path="google" element={<AdminGoogle />} />
             </Route>

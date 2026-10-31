@@ -1,12 +1,13 @@
 import type { StoreSettings, Vehicle } from './types'
 import { slugify } from './format'
+import { DEFAULT_CATEGORIES } from './categories'
 
 // Fotos de demonstração: Wikimedia Commons (licenças livres, crédito no anúncio).
 // Na versão final, o lojista sobe as fotos reais pelo painel.
 const commons = (file: string) =>
   `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1280`
 
-type SeedInput = Omit<Vehicle, 'id' | 'slug' | 'created_at' | 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'type' | 'fuel' | 'description' | 'version'> &
+type SeedInput = Omit<Vehicle, 'id' | 'slug' | 'created_at' | 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'type' | 'fuel' | 'description' | 'version' | 'hidden' | 'promo_until'> &
   Partial<Pick<Vehicle, 'promo_price' | 'promo_label' | 'featured' | 'status' | 'features' | 'fuel' | 'description' | 'version'>>
 
 const BASE_FEATURES = ['Revisada na loja', 'Garantia de 90 dias', 'Documentação em dia', 'Manual e chave reserva']
@@ -59,6 +60,8 @@ export const SEED_VEHICLES: Vehicle[] = raw.map((r, i) => {
     promo_price: null,
     promo_label: '',
     featured: false,
+    hidden: false,
+    promo_until: '',
     status: 'disponivel',
     created_at: new Date(Date.UTC(2026, 9, 30 - i)).toISOString(),
     ...r,
@@ -67,6 +70,7 @@ export const SEED_VEHICLES: Vehicle[] = raw.map((r, i) => {
 
 export const DEFAULT_SETTINGS: StoreSettings = {
   store_name: 'NS Multimarcas',
+  categories: DEFAULT_CATEGORIES,
   logo_url: '/emblem-ns.png',
   tagline: 'Veículos, motos, consórcio e financiamento em Pindamonhangaba',
   whatsapp: '(11) 94150-8677',

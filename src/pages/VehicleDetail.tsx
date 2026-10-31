@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSite, usePageTitle } from '../lib/SiteContext'
-import { categoryName } from '../lib/categories'
-import { effectivePrice, installment, km, money, n, vehicleTitle, yearLabel } from '../lib/format'
+import { dateBR, effectivePrice, installment, isPromo, km, money, n, vehicleTitle, yearLabel } from '../lib/format'
 import { waLink, waTradeText, waVehicleText } from '../lib/whatsapp'
 import { track } from '../lib/store'
 import { VehicleImage } from '../components/VehicleImage'
@@ -15,8 +14,9 @@ const TERMS = [12, 24, 36, 48]
 
 export default function VehicleDetail() {
   const { slug } = useParams()
-  const { vehicles, settings, loading } = useSite()
-  const v = vehicles.find((x) => x.slug === slug)
+  const { vehicles, publicVehicles, settings, loading, catName: categoryName } = useSite()
+  // anúncio oculto pelo painel não abre para o público
+  const v = publicVehicles.find((x) => x.slug === slug) ?? vehicles.find((x) => x.slug === slug && x.status === 'vendido' && !x.hidden)
   const [img, setImg] = useState(0)
   const price = v ? effectivePrice(v) : 0
   const [downPct, setDownPct] = useState(30)
@@ -30,14 +30,14 @@ export default function VehicleDetail() {
   }, [v?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const related = useMemo(
-    () => (v ? vehicles.filter((x) => x.id !== v.id && x.category === v.category && x.status !== 'vendido').slice(0, 3) : []),
-    [vehicles, v],
+    () => (v ? publicVehicles.filter((x) => x.id !== v.id && x.category === v.category).slice(0, 3) : []),
+    [publicVehicles, v],
   )
 
   if (loading) return <div className="section wrap">Carregando…</div>
   if (!v) return <NotFound />
 
-  const promo = !!(v.promo_price && v.promo_price < v.price)
+  const promo = isPromo(v)
   const down = Math.round((price * downPct) / 100)
   const monthly = installment(price - down, settings.finance_rate_monthly, term)
   const origin = window.location.origin
@@ -82,6 +82,7 @@ export default function VehicleDetail() {
             </div>
 
             <div className="detail__info">
+              <p className="detail__cat">{categoryName(v.category)}</p>
               <h1 className="detail__title">
                 {v.brand} <strong>{v.model}</strong>
                 {v.version && <span className="detail__version"> {v.version}</span>}
@@ -97,10 +98,11 @@ export default function VehicleDetail() {
               ) : (
                 <>
                   <Plate size="lg" price={price} from={promo ? v.price : null} promo={promo} band={promo ? v.promo_label || 'oferta' : 'à vista'} />
+                  {promo && v.promo_until && <p className="muted" style={{ margin: '-8px 0 0', fontSize: 14 }}>Oferta válida até {dateBR(v.promo_until)}.</p>}
                   {v.status === 'reservado' && <p className="notice">Reservada no momento. Chame para entrar na fila caso a negociação não feche.</p>}
                   <div className="detail__ctas">
-                    <a className="btn btn--wa btn--lg btn--block" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
-                      <WhatsAppIcon size={20} /> Tenho interesse
+                    <a className="btn btn--primary btn--lg btn--block" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
+                      <WhatsAppIcon size={20} className="wa-glyph" /> Tenho interesse
                     </a>
                     <a className="btn btn--ghost btn--block" href={waLink(settings, waTradeText(v))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
                       Quero dar a minha na troca
@@ -169,7 +171,7 @@ export default function VehicleDetail() {
       </section>
 
       {related.length > 0 && (
-        <section className="section section--tint">
+        <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <h2 className="section__title">Outras {categoryName(v.category)} no pátio</h2>
             <div className="grid">
@@ -187,8 +189,8 @@ export default function VehicleDetail() {
             <span className="sticky-cta__name">{v.model}</span>
             <strong>{money(price)}</strong>
           </div>
-          <a className="btn btn--wa" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
-            <WhatsAppIcon size={18} /> WhatsApp
+          <a className="btn btn--primary" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
+            <WhatsAppIcon size={18} className="wa-glyph" /> WhatsApp
           </a>
         </div>
       )}

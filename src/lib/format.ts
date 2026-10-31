@@ -22,8 +22,20 @@ export function yearLabel(v: { year_fab: number; year_model: number }) {
   return v.year_fab === v.year_model ? String(v.year_model) : `${v.year_fab}/${v.year_model}`
 }
 
-export function effectivePrice(v: { price: number; promo_price: number | null }) {
-  return v.promo_price && v.promo_price < v.price ? v.promo_price : v.price
+type Priced = { price: number; promo_price: number | null; promo_until?: string }
+
+// Oferta vale se o preço promocional é menor e a data de validade (se houver) não passou
+export function isPromo(v: Priced, today = new Date().toISOString().slice(0, 10)) {
+  return !!(v.promo_price && v.promo_price < v.price && (!v.promo_until || today <= v.promo_until))
+}
+
+export function effectivePrice(v: Priced) {
+  return isPromo(v) ? v.promo_price! : v.price
+}
+
+export function dateBR(iso: string) {
+  const [y, m, d] = iso.split('-')
+  return d && m && y ? `${d}/${m}` : iso
 }
 
 // Tabela Price: parcela = PV * i / (1 - (1+i)^-n)

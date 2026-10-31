@@ -28,13 +28,16 @@ function writeLS(key: string, value: unknown) {
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()))
 
 // ---------- Veículos ----------
+// Garante campos novos em dados salvos por versões anteriores
+const normalize = (v: Vehicle): Vehicle => ({ ...v, hidden: v.hidden ?? false, promo_until: v.promo_until ?? '', features: v.features ?? [], images: v.images ?? [] })
+
 export async function listVehicles(): Promise<Vehicle[]> {
   if (supabase) {
     const { data, error } = await supabase.from('vehicles').select('*').order('created_at', { ascending: false })
     if (error) throw error
-    return data as Vehicle[]
+    return (data as Vehicle[]).map(normalize)
   }
-  return readLS<Vehicle[]>(K.vehicles, SEED_VEHICLES)
+  return readLS<Vehicle[]>(K.vehicles, SEED_VEHICLES).map(normalize)
 }
 
 export async function getVehicle(slug: string): Promise<Vehicle | null> {
@@ -71,12 +74,19 @@ export async function deleteVehicle(id: string) {
 }
 
 // ---------- Configurações da loja ----------
+function withDefaults(s: Partial<StoreSettings>): StoreSettings {
+  const merged = { ...DEFAULT_SETTINGS, ...s }
+  if (!s.categories?.length) merged.categories = DEFAULT_SETTINGS.categories
+  if (!s.logo_url || s.logo_url === '/logo-ns.png') merged.logo_url = DEFAULT_SETTINGS.logo_url
+  return merged
+}
+
 export async function getSettings(): Promise<StoreSettings> {
   if (supabase) {
     const { data } = await supabase.from('settings').select('data').eq('id', 1).maybeSingle()
-    return { ...DEFAULT_SETTINGS, ...((data?.data as Partial<StoreSettings>) ?? {}) }
+    return withDefaults((data?.data as Partial<StoreSettings>) ?? {})
   }
-  return { ...DEFAULT_SETTINGS, ...readLS<Partial<StoreSettings>>(K.settings, {}) }
+  return withDefaults(readLS<Partial<StoreSettings>>(K.settings, {}))
 }
 
 export async function saveSettings(s: StoreSettings) {

@@ -23,11 +23,23 @@ export interface Vehicle {
   images: string[]
   image_credit: string
   featured: boolean
+  hidden: boolean
+  promo_until: string
   status: VehicleStatus
   created_at: string
 }
 
+export interface Category {
+  id: string
+  name: string
+  short: string
+  description: string
+  type: VehicleType
+  visible: boolean
+}
+
 export interface StoreSettings {
+  categories: Category[]
   store_name: string
   logo_url: string
   tagline: string

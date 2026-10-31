@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useSite, usePageTitle } from '../lib/SiteContext'
-import { ALL_CATEGORIES, MOTO_CATEGORIES, categoryName } from '../lib/categories'
-import { effectivePrice } from '../lib/format'
+import { effectivePrice, isPromo } from '../lib/format'
 import { VehicleCard } from '../components/VehicleCard'
 
 const SORTS = {
@@ -15,7 +14,7 @@ const SORTS = {
 type Sort = keyof typeof SORTS
 
 export default function Stock() {
-  const { vehicles, loading, error } = useSite()
+  const { publicVehicles: pool, categories, catName, loading, error } = useSite()
   const [params, setParams] = useSearchParams()
   const [showFilters, setShowFilters] = useState(false)
 
@@ -26,7 +25,7 @@ export default function Stock() {
   const offers = params.get('ofertas') === '1'
   const sort = (params.get('ordem') as Sort) || 'recentes'
 
-  usePageTitle(cat ? `Motos ${categoryName(cat)}` : 'Estoque')
+  usePageTitle(cat ? catName(cat) : 'Estoque')
 
   const set = (k: string, v: string) => {
     const p = new URLSearchParams(params)
@@ -35,9 +34,8 @@ export default function Stock() {
     setParams(p, { replace: true })
   }
 
-  const pool = vehicles.filter((v) => v.status !== 'vendido')
   const brands = useMemo(() => [...new Set(pool.map((v) => v.brand))].sort(), [pool])
-  const usedCats = ALL_CATEGORIES.filter((c) => pool.some((v) => v.category === c.id) || MOTO_CATEGORIES.includes(c))
+  const usedCats = categories.filter((c) => c.visible && pool.some((v) => v.category === c.id))
 
   const list = useMemo(() => {
     const term = q.trim().toLowerCase()
@@ -46,7 +44,7 @@ export default function Stock() {
         (!cat || v.category === cat) &&
         (!brand || v.brand === brand) &&
         (!max || effectivePrice(v) <= max) &&
-        (!offers || (v.promo_price && v.promo_price < v.price)) &&
+        (!offers || isPromo(v)) &&
         (!term || `${v.brand} ${v.model} ${v.version} ${v.color}`.toLowerCase().includes(term)),
     )
     const by: Record<Sort, (a: typeof r[0], b: typeof r[0]) => number> = {
@@ -59,15 +57,15 @@ export default function Stock() {
     return r.sort(by[sort] ?? by.recentes)
   }, [pool, cat, brand, max, offers, q, sort])
 
-  const activeCat = ALL_CATEGORIES.find((c) => c.id === cat)
+  const activeCat = categories.find((c) => c.id === cat)
   const filtersOn = [cat, brand, q, max ? '1' : '', offers ? '1' : ''].filter(Boolean).length
 
   return (
     <section className="section stock">
       <div className="wrap">
         <header className="stock__head">
-          <h1 className="page-title">{activeCat ? `Motos ${activeCat.name}` : offers ? 'Ofertas' : 'Estoque'}</h1>
-          <p className="stock__lead">{activeCat ? activeCat.description : 'Todas as motos e carros disponíveis na loja agora.'}</p>
+          <h1 className="page-title">{activeCat ? activeCat.name : offers ? 'Ofertas' : 'Estoque'}</h1>
+          <p className="stock__lead">{activeCat ? activeCat.description : 'Tudo o que está no pátio agora. Chegou moto nova? Ela aparece aqui primeiro.'}</p>
         </header>
 
         <div className="chips" role="group" aria-label="Categorias">

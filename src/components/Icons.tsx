@@ -44,3 +44,17 @@ export const CloseIcon = ({ size = 24 }: P) => (
     <path d="M6 6l12 12M18 6L6 18" />
   </svg>
 )
+
+export const EyeIcon = ({ size = 18, off = false }: P & { off?: boolean }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+    <circle cx="12" cy="12" r="3" />
+    {off && <path d="M3 3l18 18" />}
+  </svg>
+)
+
+export const ArrowUpDown = ({ size = 16, dir }: P & { dir: 'up' | 'down' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    {dir === 'up' ? <path d="M6 15l6-6 6 6" /> : <path d="M6 9l6 6 6-6" />}
+  </svg>
+)

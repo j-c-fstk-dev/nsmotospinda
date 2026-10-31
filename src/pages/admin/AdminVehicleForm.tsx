@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSite } from '../../lib/SiteContext'
 import { saveVehicle, uploadImage } from '../../lib/store'
 import type { Vehicle } from '../../lib/types'
-import { BRANDS, CAR_CATEGORIES, MOTO_CATEGORIES } from '../../lib/categories'
+import { BRANDS } from '../../lib/categories'
 import { slugify } from '../../lib/format'
 import { VehicleImage } from '../../components/VehicleImage'
 
@@ -29,6 +29,8 @@ const EMPTY: Vehicle = {
   images: [],
   image_credit: '',
   featured: false,
+  hidden: false,
+  promo_until: '',
   status: 'disponivel',
   created_at: '',
 }
@@ -36,7 +38,7 @@ const EMPTY: Vehicle = {
 export default function AdminVehicleForm() {
   const { id } = useParams()
   const nav = useNavigate()
-  const { vehicles, reload } = useSite()
+  const { vehicles, reload, categories } = useSite()
   const existing = vehicles.find((v) => v.id === id)
   const [v, setV] = useState<Vehicle>(existing ?? EMPTY)
   const [busy, setBusy] = useState(false)
@@ -50,7 +52,7 @@ export default function AdminVehicleForm() {
 
   const set = <K extends keyof Vehicle>(k: K, val: Vehicle[K]) => setV((p) => ({ ...p, [k]: val }))
   const num = (s: string) => (s === '' ? 0 : Number(s.replace(/\D/g, '')))
-  const cats = v.type === 'moto' ? MOTO_CATEGORIES : CAR_CATEGORIES
+  const cats = categories.filter((c) => c.type === v.type)
 
   async function addFiles(files: FileList | null) {
     if (!files?.length) return
@@ -144,7 +146,7 @@ export default function AdminVehicleForm() {
           <div className="aform__grid">
             <label className="field">
               <span>Tipo</span>
-              <select value={v.type} onChange={(e) => setV((p) => ({ ...p, type: e.target.value as Vehicle['type'], category: e.target.value === 'moto' ? 'street' : 'hatch' }))}>
+              <select value={v.type} onChange={(e) => setV((p) => ({ ...p, type: e.target.value as Vehicle['type'], category: categories.find((c) => c.type === e.target.value)?.id ?? '' }))}>
                 <option value="moto">Moto</option>
                 <option value="carro">Carro</option>
               </select>
@@ -153,7 +155,10 @@ export default function AdminVehicleForm() {
               <span>Categoria</span>
               <select value={v.category} onChange={(e) => set('category', e.target.value)}>
                 {cats.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}: {c.short}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                    {c.visible ? '' : ' (escondida)'}
+                  </option>
                 ))}
               </select>
             </label>
@@ -214,11 +219,20 @@ export default function AdminVehicleForm() {
               <span>Selo da oferta</span>
               <input placeholder="Ex.: Baixou, Feirão, Último do mês" maxLength={24} value={v.promo_label} onChange={(e) => set('promo_label', e.target.value)} />
             </label>
+            <label className="field">
+              <span>Oferta válida até</span>
+              <input type="date" value={v.promo_until} onChange={(e) => set('promo_until', e.target.value)} />
+              <small>Opcional. Depois dessa data o site volta ao preço normal sozinho.</small>
+            </label>
           </div>
           <div className="aform__checks">
             <label className="check">
               <input type="checkbox" checked={v.featured} onChange={(e) => set('featured', e.target.checked)} />
               <span>Mostrar nos destaques da página inicial</span>
+            </label>
+            <label className="check">
+              <input type="checkbox" checked={v.hidden} onChange={(e) => set('hidden', e.target.checked)} />
+              <span>Esconder do site (rascunho)</span>
             </label>
             <label className="field field--inline">
               <span>Situação</span>

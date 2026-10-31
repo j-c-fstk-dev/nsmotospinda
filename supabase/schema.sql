@@ -22,10 +22,16 @@ create table if not exists public.vehicles (
   images text[] not null default '{}',
   image_credit text not null default '',
   featured boolean not null default false,
+  hidden boolean not null default false,
+  promo_until text not null default '',
   status text not null default 'disponivel' check (status in ('disponivel','reservado','vendido')),
   created_at timestamptz not null default now()
 );
 create index if not exists vehicles_status_idx on public.vehicles (status);
+
+-- Para bancos criados com a versão anterior deste arquivo:
+alter table public.vehicles add column if not exists hidden boolean not null default false;
+alter table public.vehicles add column if not exists promo_until text not null default '';
 
 create table if not exists public.settings (
   id int primary key default 1 check (id = 1),
@@ -45,7 +51,9 @@ alter table public.vehicles enable row level security;
 alter table public.settings enable row level security;
 alter table public.events enable row level security;
 
-create policy "vehicles public read" on public.vehicles for select using (true);
+-- público não vê anúncios escondidos; o lojista logado vê tudo
+create policy "vehicles public read" on public.vehicles for select to anon using (hidden = false);
+create policy "vehicles admin read" on public.vehicles for select to authenticated using (true);
 create policy "vehicles admin write" on public.vehicles for all to authenticated using (true) with check (true);
 
 create policy "settings public read" on public.settings for select using (true);

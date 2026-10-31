@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSite } from '../../lib/SiteContext'
 import { listEvents } from '../../lib/store'
 import type { TrackEvent } from '../../lib/types'
-import { money, effectivePrice, vehicleTitle } from '../../lib/format'
+import { money, effectivePrice, isPromo, vehicleTitle } from '../../lib/format'
 
 export default function AdminDashboard() {
   const { vehicles } = useSite()
@@ -19,12 +19,12 @@ export default function AdminDashboard() {
   const views = recent.filter((e) => e.kind === 'view').length
   const reviews = recent.filter((e) => e.kind === 'review').length
 
-  const stockValue = vehicles.filter((v) => v.status === 'disponivel').reduce((s, v) => s + effectivePrice(v), 0)
+  const stockValue = vehicles.filter((v) => v.status === 'disponivel' && !v.hidden).reduce((s, v) => s + effectivePrice(v), 0)
   const counts = {
     disponivel: vehicles.filter((v) => v.status === 'disponivel').length,
     reservado: vehicles.filter((v) => v.status === 'reservado').length,
     vendido: vehicles.filter((v) => v.status === 'vendido').length,
-    oferta: vehicles.filter((v) => v.promo_price && v.promo_price < v.price && v.status !== 'vendido').length,
+    oferta: vehicles.filter((v) => isPromo(v) && v.status !== 'vendido').length,
   }
 
   const top = useMemo(() => {

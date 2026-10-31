@@ -29,6 +29,14 @@ Importe o repositório. O `netlify.toml` já define build (`npm run build`), pas
 5. **Domínio:** Netlify → Domain management → adicionar domínio e apontar DNS.
 6. Substituir o logo provisório (recortado de print do Instagram) pelo arquivo original em *Dados da loja → Logo*.
 
+## O que o lojista faz no painel (`/admin`)
+
+- **Veículos:** cadastrar, editar, excluir, marcar destaque (estrela), esconder/mostrar no site (olho), situação disponível/reservada/vendida. Filtros por situação, ofertas e escondidos.
+- **Ofertas:** no cadastro do veículo, "Preço de oferta" + "Selo" (ex.: Baixou) + "Válida até" (opcional; vence sozinha). O site mostra o preço antigo riscado, a placa dourada e a seção "Baixou o preço".
+- **Categorias:** renomear, mudar subtítulo/descrição, reordenar, esconder (some do site junto com os veículos dela), criar e excluir (só vazias).
+- **Dados da loja:** logo, WhatsApp, telefone, endereço, horário, faixa de aviso, taxa do simulador, Google Analytics.
+- **Google e avaliações:** link de avaliação, perfil, nota e QR code para o balcão.
+
 ## Estrutura
 
 ```

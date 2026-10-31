@@ -31,8 +31,8 @@ export function Layout() {
             <NavLink to="/estoque">Estoque</NavLink>
             <a href="/#como-comprar">Como comprar</a>
             <a href="/#loja">Onde estamos</a>
-            <a className="btn btn--wa nav__wa" href={wa} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
-              <WhatsAppIcon size={18} /> Chamar no WhatsApp
+            <a className="btn btn--line nav__wa" href={wa} target="_blank" rel="noopener" onClick={() => track('whatsapp')}>
+              <WhatsAppIcon size={18} className="wa-glyph" /> WhatsApp
             </a>
           </nav>
           <button className="menu-btn" aria-expanded={open} aria-label={open ? 'Fechar menu' : 'Abrir menu'} onClick={() => setOpen((o) => !o)}>
@@ -86,8 +86,9 @@ export function Layout() {
             </div>
           </div>
         </div>
-        <div className="wrap footer__base">
-          <span>© {new Date().getFullYear()} {settings.store_name}</span>
+        <p className="footer__word" aria-hidden="true">NS Multimarcas</p>
+        <div className="footer__base">
+          <span>© {new Date().getFullYear()} {settings.store_name}. Pindamonhangaba, SP.</span>
           <span>Fotos de demonstração: Wikimedia Commons</span>
         </div>
       </footer>

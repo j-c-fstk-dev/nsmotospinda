@@ -26,9 +26,6 @@ export function ReviewCard({ settings }: { settings: StoreSettings }) {
   return (
     <div className="review">
       <div className="review__main">
-        <div className="review__g" aria-hidden="true">
-          <span style={{ color: '#4285F4' }}>G</span>
-        </div>
         <div>
           <h2 className="review__title">Comprou com a gente? Conte como foi.</h2>
           <p className="review__text">
@@ -52,8 +49,8 @@ export function ReviewCard({ settings }: { settings: StoreSettings }) {
               </a>
             ))}
           </div>
-          <a className="btn btn--ghost" href={url} target="_blank" rel="noopener" onClick={() => track('review')}>
-            Avaliar no Google
+          <a className="link" href={url} target="_blank" rel="noopener" onClick={() => track('review')}>
+            Escrever avaliação no Google
           </a>
         </div>
       </div>
