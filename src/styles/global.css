@@ -272,13 +272,7 @@ textarea {
   line-height: 1.5;
 }
 .plate__flag {
-  width: 14px;
-  height: 9px;
-  border-radius: 1px;
-  background:
-    radial-gradient(circle at 50% 50%, #1b3f9e 0 2px, transparent 2.5px),
-    linear-gradient(135deg, transparent 30%, #ffdf00 30% 70%, transparent 70%) center/9px 7px no-repeat,
-    #009b3a;
+  display: block;
   flex: none;
 }
 .plate__body {

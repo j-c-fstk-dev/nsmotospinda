@@ -89,5 +89,8 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   announcement: 'Estamos de endereço novo: Rua Doutor Campos Salles, 271, Centro. Venha conhecer!',
   ga_id: '',
   finance_rate_monthly: 1.99,
+  finance_terms: [12, 24, 36, 48],
+  finance_down_pct: 30,
+  finance_enabled: true,
   warranty_text: 'Todas as motos passam por revisão na loja e saem com 90 dias de garantia de motor e câmbio.',
 }

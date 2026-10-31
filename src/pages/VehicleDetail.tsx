@@ -10,7 +10,6 @@ import { Plate } from '../components/Plate'
 import { WhatsAppIcon } from '../components/Icons'
 import NotFound from './NotFound'
 
-const TERMS = [12, 24, 36, 48]
 
 export default function VehicleDetail() {
   const { slug } = useParams()
@@ -19,8 +18,9 @@ export default function VehicleDetail() {
   const v = publicVehicles.find((x) => x.slug === slug) ?? vehicles.find((x) => x.slug === slug && x.status === 'vendido' && !x.hidden)
   const [img, setImg] = useState(0)
   const price = v ? effectivePrice(v) : 0
-  const [downPct, setDownPct] = useState(30)
-  const [term, setTerm] = useState(36)
+  const terms = settings.finance_terms?.length ? [...settings.finance_terms].sort((a, b) => a - b) : [12, 24, 36, 48]
+  const [downPct, setDownPct] = useState(settings.finance_down_pct ?? 30)
+  const [term, setTerm] = useState(terms[Math.floor((terms.length - 1) / 2)] ?? 36)
 
   usePageTitle(v ? `${vehicleTitle(v)} ${yearLabel(v)}` : '')
 
@@ -39,7 +39,8 @@ export default function VehicleDetail() {
 
   const promo = isPromo(v)
   const down = Math.round((price * downPct) / 100)
-  const monthly = installment(price - down, settings.finance_rate_monthly, term)
+  const t = terms.includes(term) ? term : terms[Math.floor((terms.length - 1) / 2)]
+  const monthly = installment(price - down, settings.finance_rate_monthly, t)
   const origin = window.location.origin
   const sold = v.status === 'vendido'
 
@@ -109,6 +110,7 @@ export default function VehicleDetail() {
                     </a>
                   </div>
 
+                  {settings.finance_enabled !== false && (
                   <div className="sim">
                     <h2 className="sim__title">Simule o financiamento</h2>
                     <label className="field">
@@ -118,19 +120,20 @@ export default function VehicleDetail() {
                       <input type="range" min={0} max={80} step={5} value={downPct} onChange={(e) => setDownPct(Number(e.target.value))} />
                     </label>
                     <div className="sim__terms" role="group" aria-label="Número de parcelas">
-                      {TERMS.map((t) => (
-                        <button key={t} className={`chip ${t === term ? 'chip--on' : ''}`} aria-pressed={t === term} onClick={() => setTerm(t)}>
-                          {t}x
+                      {terms.map((opt) => (
+                        <button key={opt} className={`chip ${opt === t ? 'chip--on' : ''}`} aria-pressed={opt === t} onClick={() => setTerm(opt)}>
+                          {opt}x
                         </button>
                       ))}
                     </div>
                     <p className="sim__result">
-                      <span>{term}x de</span> <strong>{money(monthly)}</strong>
+                      <span>{t}x de</span> <strong>{money(monthly)}</strong>
                     </p>
                     <p className="sim__note">
                       Simulação com taxa de {String(settings.finance_rate_monthly).replace('.', ',')}% a.m. O valor final depende da análise de crédito do banco.
                     </p>
                   </div>
+                  )}
                 </>
               )}
             </div>

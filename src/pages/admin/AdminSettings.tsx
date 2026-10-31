@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { useSite } from '../../lib/SiteContext'
 import { saveSettings, uploadImage } from '../../lib/store'
 import type { StoreSettings } from '../../lib/types'
+import { installment, money } from '../../lib/format'
 
 export default function AdminSettings() {
   const { settings, reload } = useSite()
@@ -9,11 +10,21 @@ export default function AdminSettings() {
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
 
-  useEffect(() => setS(settings), [settings])
+  const [rate, setRate] = useState(String(settings.finance_rate_monthly).replace('.', ','))
+  useEffect(() => {
+    setS(settings)
+    setRate(String(settings.finance_rate_monthly).replace('.', ','))
+  }, [settings])
+  useEffect(() => {
+    const n = Number(rate.replace(',', '.'))
+    if (!Number.isNaN(n) && n >= 0 && n < 20) setS((p) => ({ ...p, finance_rate_monthly: n }))
+  }, [rate])
+  const exampleTerm = s.finance_terms.includes(36) ? 36 : s.finance_terms[s.finance_terms.length - 1] ?? 36
   const set = <K extends keyof StoreSettings>(k: K, v: StoreSettings[K]) => setS((p) => ({ ...p, [k]: v }))
 
   async function submit(e: FormEvent) {
     e.preventDefault()
+    if (!s.finance_terms.length) return setMsg('Escolha pelo menos um prazo para o simulador.')
     setBusy(true)
     try {
       await saveSettings(s)
@@ -102,6 +113,49 @@ export default function AdminSettings() {
         </fieldset>
 
         <fieldset>
+          <legend>Simulador de financiamento</legend>
+          <label className="check">
+            <input type="checkbox" checked={s.finance_enabled !== false} onChange={(e) => set('finance_enabled', e.target.checked)} />
+            <span>Mostrar o simulador na página de cada moto</span>
+          </label>
+          <div className="aform__grid">
+            <label className="field">
+              <span>Taxa de juros (% ao mês)</span>
+              <input inputMode="decimal" value={rate} onChange={(e) => setRate(e.target.value)} onBlur={() => setRate(String(s.finance_rate_monthly).replace('.', ','))} />
+              <small>Use a taxa média que o banco parceiro está aprovando.</small>
+            </label>
+            <label className="field">
+              <span>Entrada sugerida (%)</span>
+              <input inputMode="numeric" value={s.finance_down_pct ?? 30} onChange={(e) => set('finance_down_pct', Math.min(80, Number(e.target.value.replace(/\D/g, '')) || 0))} />
+              <small>Valor inicial do controle de entrada.</small>
+            </label>
+          </div>
+          <div className="field">
+            <span>Prazos oferecidos</span>
+            <div className="sim__terms" role="group" aria-label="Prazos oferecidos">
+              {[6, 12, 18, 24, 36, 48, 60].map((t) => {
+                const on = s.finance_terms.includes(t)
+                return (
+                  <button
+                    type="button"
+                    key={t}
+                    className={`chip ${on ? 'chip--on' : ''}`}
+                    aria-pressed={on}
+                    onClick={() => set('finance_terms', on ? s.finance_terms.filter((x) => x !== t) : [...s.finance_terms, t].sort((a, b) => a - b))}
+                  >
+                    {t}x
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <p className="notice">
+            Exemplo: moto de {money(20000)} com {s.finance_down_pct ?? 30}% de entrada em {exampleTerm}x fica em{' '}
+            <strong>{money(installment(20000 * (1 - (s.finance_down_pct ?? 30) / 100), s.finance_rate_monthly, exampleTerm))}</strong> por mês.
+          </p>
+        </fieldset>
+
+        <fieldset>
           <legend>Avisos e textos</legend>
           <label className="field">
             <span>Faixa de aviso no topo do site</span>
@@ -112,10 +166,6 @@ export default function AdminSettings() {
             <textarea rows={2} value={s.warranty_text} onChange={(e) => set('warranty_text', e.target.value)} />
           </label>
           <div className="aform__grid">
-            <label className="field">
-              <span>Taxa do simulador (% ao mês)</span>
-              <input inputMode="decimal" value={s.finance_rate_monthly} onChange={(e) => set('finance_rate_monthly', Number(e.target.value.replace(',', '.')) || 0)} />
-            </label>
             <label className="field">
               <span>Google Analytics (ID)</span>
               <input value={s.ga_id} placeholder="G-XXXXXXXXXX" onChange={(e) => set('ga_id', e.target.value.trim())} />

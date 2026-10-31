@@ -59,6 +59,9 @@ export interface StoreSettings {
   announcement: string
   ga_id: string
   finance_rate_monthly: number
+  finance_terms: number[]
+  finance_down_pct: number
+  finance_enabled: boolean
   warranty_text: string
 }
 
