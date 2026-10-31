@@ -26,6 +26,7 @@ export default function AdminLayout() {
       <aside className="admin__side">
         <div className="admin__brand">
           <LogoImg height={40} />
+          <span>Painel</span>
         </div>
         <nav className="admin__nav" aria-label="Painel">
           <NavLink to="/admin" end>Resumo</NavLink>

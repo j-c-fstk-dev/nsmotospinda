@@ -35,7 +35,7 @@ export default function AdminSettings() {
         <fieldset>
           <legend>Logo</legend>
           <div className="logo-edit">
-            <img src={s.logo_url || '/logo-ns.png'} alt="Logo atual" />
+            <img src={s.logo_url || '/emblem-ns.png'} alt="Logo atual" />
             <label className="btn btn--ghost btn--sm">
               Trocar logo
               <input
@@ -49,7 +49,7 @@ export default function AdminSettings() {
               />
             </label>
           </div>
-          <small className="muted">Use a versão com fundo preto ou transparente. Ela aparece no topo, no rodapé e no painel.</small>
+          <small className="muted">Use uma imagem quadrada, com fundo preto ou transparente. Ela aparece no topo, no rodapé e no painel.</small>
         </fieldset>
 
         <fieldset>

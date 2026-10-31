@@ -274,15 +274,16 @@ textarea {
 /* ---------- Logo ---------- */
 .logo-img {
   display: block;
-  height: 46px;
-  width: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
 }
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  color: var(--ink);
+  color: #fff;
 }
 .logo-mark {
   position: relative;
@@ -323,7 +324,7 @@ textarea {
 }
 .logo__city {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--gold-2);
 }
 .logo--light {
   color: #fff;
@@ -1538,8 +1539,7 @@ textarea {
   background: var(--night);
 }
 .login__logo {
-  height: 64px;
-  width: auto;
+  border-radius: 50%;
   align-self: center;
   margin-bottom: 8px;
 }
@@ -1583,8 +1583,8 @@ textarea {
   font-stretch: 112%;
   padding: 0 8px 20px;
 }
-.admin__brand .logo-mark {
-  border-color: #fff;
+.admin__brand .logo-img {
+  border-radius: 50%;
 }
 .admin__nav {
   display: flex;
@@ -2050,9 +2050,8 @@ textarea {
   flex-wrap: wrap;
 }
 .logo-edit img {
-  height: 64px;
-  width: auto;
-  background: var(--night);
-  border-radius: 8px;
-  padding: 6px 10px;
+  height: 72px;
+  width: 72px;
+  border-radius: 50%;
+  object-fit: cover;
 }

@@ -67,7 +67,7 @@ export const SEED_VEHICLES: Vehicle[] = raw.map((r, i) => {
 
 export const DEFAULT_SETTINGS: StoreSettings = {
   store_name: 'NS Multimarcas',
-  logo_url: '/logo-ns.png',
+  logo_url: '/emblem-ns.png',
   tagline: 'Veículos, motos, consórcio e financiamento em Pindamonhangaba',
   whatsapp: '(11) 94150-8677',
   phone: '(12) 99201-4683',

@@ -26,7 +26,7 @@ export default function AdminLogin() {
 
   return (
     <div className="login">
-      <LogoImg height={64} className="login__logo" />
+      <LogoImg height={112} className="login__logo" />
       <form className="login__card" onSubmit={submit}>
         <h1>Entrar no painel</h1>
         {DEMO_MODE && <p className="notice">Demonstração: os dados de acesso já estão preenchidos.</p>}
