@@ -3,19 +3,19 @@ import type { Vehicle } from '../lib/types'
 import { isPromo, km, vehicleTitle, yearLabel } from '../lib/format'
 import { useSite } from '../lib/SiteContext'
 import { Plate } from './Plate'
+import { statusLabel, vehiclePath } from '../lib/words'
 import { VehicleImage } from './VehicleImage'
 
-const STATUS: Record<string, string> = { reservado: 'Reservada', vendido: 'Vendida' }
 
 export function VehicleCard({ v, eager = false }: { v: Vehicle; eager?: boolean }) {
   const { catName } = useSite()
   const promo = isPromo(v)
   return (
     <article className={`vcard ${v.status !== 'disponivel' ? 'vcard--off' : ''}`}>
-      <Link to={`/moto/${v.slug}`} className="vcard__link">
+      <Link to={vehiclePath(v)} className="vcard__link">
         <div className="vcard__media">
           <VehicleImage src={v.images[0]} alt={`${vehicleTitle(v)} ${yearLabel(v)}`} eager={eager} />
-          {STATUS[v.status] && <span className="vcard__status">{STATUS[v.status]}</span>}
+          {v.status !== 'disponivel' && <span className="vcard__status">{statusLabel(v)}</span>}
           {promo && v.promo_label && <span className="vcard__promo">{v.promo_label}</span>}
         </div>
         <div className="vcard__body">

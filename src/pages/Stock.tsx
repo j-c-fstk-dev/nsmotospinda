@@ -65,7 +65,7 @@ export default function Stock() {
       <div className="wrap">
         <header className="stock__head">
           <h1 className="page-title">{activeCat ? activeCat.name : offers ? 'Ofertas' : 'Estoque'}</h1>
-          <p className="stock__lead">{activeCat ? activeCat.description : 'Tudo o que está no pátio agora. Chegou moto nova? Ela aparece aqui primeiro.'}</p>
+          <p className="stock__lead">{activeCat ? activeCat.description : 'Tudo o que está no pátio agora. Chegou novidade? Ela aparece aqui primeiro.'}</p>
         </header>
 
         <div className="chips" role="group" aria-label="Categorias">
@@ -135,7 +135,7 @@ export default function Stock() {
             {error && <p className="notice notice--error">{error}</p>}
             {!loading && list.length === 0 ? (
               <div className="empty">
-                <h2>Nenhuma moto com esses filtros agora</h2>
+                <h2>Nenhum veículo com esses filtros agora</h2>
                 <p>Chega estoque novo toda semana. Tire um filtro ou chame no WhatsApp que a gente avisa quando entrar.</p>
                 <button className="btn btn--primary" onClick={() => setParams({}, { replace: true })}>
                   Ver todo o estoque

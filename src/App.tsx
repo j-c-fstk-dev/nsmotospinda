@@ -28,6 +28,7 @@ export default function App() {
               <Route index element={<Home />} />
               <Route path="estoque" element={<Stock />} />
               <Route path="moto/:slug" element={<VehicleDetail />} />
+              <Route path="carro/:slug" element={<VehicleDetail />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="admin/login" element={<AdminLogin />} />

@@ -5,6 +5,7 @@ import { effectivePrice, isPromo, vehicleTitle, yearLabel, km } from '../lib/for
 import { waLink, WA_GENERAL } from '../lib/whatsapp'
 import { track, byFeaturedRank } from '../lib/store'
 import { VehicleCard } from '../components/VehicleCard'
+import { vehiclePath } from '../lib/words'
 import { VehicleImage } from '../components/VehicleImage'
 import { Plate } from '../components/Plate'
 import { ReviewCard } from '../components/ReviewCard'
@@ -69,7 +70,7 @@ export default function Home() {
             </a>
           </div>
           {hero && (
-            <Link to={`/moto/${hero.slug}`} className="hero__tag">
+            <Link to={vehiclePath(hero)} className="hero__tag">
               <p className="hero__tag-name">
                 Na foto
                 <strong>

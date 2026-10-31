@@ -6,6 +6,7 @@ import type { Vehicle, VehicleStatus } from '../../lib/types'
 import { isPromo, km, money, yearLabel } from '../../lib/format'
 import { VehicleImage } from '../../components/VehicleImage'
 import { StarIcon, EyeIcon } from '../../components/Icons'
+import { words } from '../../lib/words'
 
 export default function AdminVehicles() {
   const { vehicles, reload, catName: categoryName } = useSite()
@@ -107,8 +108,8 @@ export default function AdminVehicles() {
                 onChange={(e) => patch(v, { status: e.target.value as VehicleStatus }, 'Situação atualizada.')}
               >
                 <option value="disponivel">Disponível</option>
-                <option value="reservado">Reservada</option>
-                <option value="vendido">Vendida</option>
+                <option value="reservado">{words(v.type).reserved}</option>
+                <option value="vendido">{words(v.type).sold}</option>
               </select>
               <Link to={`/admin/veiculos/${v.id}`} className="btn btn--ghost btn--sm">Editar</Link>
               <button className="btn btn--danger btn--sm" onClick={() => remove(v)}>Excluir</button>

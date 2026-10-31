@@ -4,6 +4,7 @@ import { useSite } from '../../lib/SiteContext'
 import { saveVehicle, uploadImage } from '../../lib/store'
 import type { Vehicle } from '../../lib/types'
 import { BRANDS } from '../../lib/categories'
+import { words } from '../../lib/words'
 import { slugify } from '../../lib/format'
 import { VehicleImage } from '../../components/VehicleImage'
 
@@ -239,8 +240,8 @@ export default function AdminVehicleForm() {
               <span>Situação</span>
               <select value={v.status} onChange={(e) => set('status', e.target.value as Vehicle['status'])}>
                 <option value="disponivel">Disponível</option>
-                <option value="reservado">Reservada</option>
-                <option value="vendido">Vendida</option>
+                <option value="reservado">{words(v.type).reserved}</option>
+                <option value="vendido">{words(v.type).sold}</option>
               </select>
             </label>
           </div>

@@ -9,6 +9,7 @@ import { VehicleCard } from '../components/VehicleCard'
 import { Plate } from '../components/Plate'
 import { WhatsAppIcon } from '../components/Icons'
 import NotFound from './NotFound'
+import { words } from '../lib/words'
 
 
 export default function VehicleDetail() {
@@ -54,6 +55,7 @@ export default function VehicleDetail() {
   const monthly = installment(price - down, settings.finance_rate_monthly, t)
   const origin = window.location.origin
   const sold = v.status === 'vendido'
+  const w = words(v.type)
 
   const specs: [string, string][] = [
     ['Marca', v.brand],
@@ -106,18 +108,20 @@ export default function VehicleDetail() {
               </p>
 
               {sold ? (
-                <p className="notice">Essa moto já foi vendida. Veja outras parecidas abaixo.</p>
+                <p className="notice">
+                  {w.this[0].toUpperCase() + w.this.slice(1)} {w.noun} já foi {w.sold.toLowerCase()}. Veja outras opções parecidas abaixo.
+                </p>
               ) : (
                 <>
                   <Plate size="lg" price={price} from={promo ? v.price : null} promo={promo} band={promo ? v.promo_label || 'oferta' : 'à vista'} />
                   {promo && v.promo_until && <p className="muted" style={{ margin: '-8px 0 0', fontSize: 14 }}>Oferta válida até {dateBR(v.promo_until)}.</p>}
-                  {v.status === 'reservado' && <p className="notice">Reservada no momento. Chame para entrar na fila caso a negociação não feche.</p>}
+                  {v.status === 'reservado' && <p className="notice">{w.reserved} no momento. Chame para entrar na fila caso a negociação não feche.</p>}
                   <div className="detail__ctas" ref={ctasRef}>
                     <a className="btn btn--primary btn--lg btn--block" href={waLink(settings, waVehicleText(v, origin))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
                       <WhatsAppIcon size={20} className="wa-glyph" /> Tenho interesse
                     </a>
                     <a className="btn btn--ghost btn--block" href={waLink(settings, waTradeText(v))} target="_blank" rel="noopener" onClick={() => track('whatsapp', v.id)}>
-                      Quero dar a minha na troca
+                      Tenho um veículo para dar na troca
                     </a>
                   </div>
 
@@ -165,7 +169,9 @@ export default function VehicleDetail() {
             <div>
               {v.description && (
                 <>
-                  <h2 className="section__title section__title--sm">Sobre essa moto</h2>
+                  <h2 className="section__title section__title--sm">
+                    Sobre {w.this} {w.noun}
+                  </h2>
                   <p className="detail__desc">{v.description}</p>
                 </>
               )}

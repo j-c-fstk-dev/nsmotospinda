@@ -7,7 +7,7 @@ export default function NotFound() {
     <section className="section">
       <div className="wrap empty">
         <h1 className="section__title">Essa página não existe mais</h1>
-        <p>Talvez a moto já tenha sido vendida. Veja o que está disponível agora.</p>
+        <p>Talvez o veículo já tenha sido vendido. Veja o que está disponível agora.</p>
         <Link to="/estoque" className="btn btn--primary">Ver estoque</Link>
       </div>
     </section>
