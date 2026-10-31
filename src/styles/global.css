@@ -2603,3 +2603,30 @@ textarea {
   align-self: center;
   font-size: 15px;
 }
+
+/* Categorias inteiras na tela (título até os controles), inclusive em notebook.
+   A foto cede altura conforme a tela; nunca passa da proporção 5:6 nem fica
+   menor que 200px. Só tablet/computador: no celular é 1 por vez, 4:3. */
+@media (min-width: 600px) {
+  .cats li {
+    container-type: inline-size;
+  }
+  .carousel .cat__img {
+    aspect-ratio: auto;
+    height: clamp(200px, calc(100svh - 300px), 120cqi);
+  }
+  .cats-sec .section__head {
+    margin-bottom: clamp(20px, 3.5vh, 56px);
+  }
+  .carousel__controls {
+    margin-top: clamp(16px, 2.5vh, 28px);
+  }
+  .carousel .cat__row {
+    margin-top: 12px;
+  }
+}
+@media (min-width: 600px) and (max-height: 760px) {
+  .cats-sec .section__title {
+    font-size: clamp(30px, 6vh, 48px);
+  }
+}
