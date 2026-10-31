@@ -156,11 +156,30 @@ export default function AdminSettings() {
         </fieldset>
 
         <fieldset>
-          <legend>Avisos e textos</legend>
-          <label className="field">
-            <span>Faixa de aviso no topo do site</span>
-            <input value={s.announcement} placeholder="Deixe vazio para esconder" maxLength={120} onChange={(e) => set('announcement', e.target.value)} />
+          <legend>Faixa de aviso no topo</legend>
+          <label className="check">
+            <input type="checkbox" checked={s.announcement_enabled !== false} onChange={(e) => set('announcement_enabled', e.target.checked)} />
+            <span>Mostrar a faixa no site</span>
           </label>
+          <label className="field">
+            <span>Texto da faixa</span>
+            <input value={s.announcement} placeholder="Ex.: Feirão de sábado: entrada em 12x no cartão" maxLength={120} onChange={(e) => set('announcement', e.target.value)} />
+            <small>{s.announcement.length}/120 caracteres. Use para endereço novo, feirão, horário especial de feriado.</small>
+          </label>
+          <label className="field">
+            <span>Link ao clicar (opcional)</span>
+            <input value={s.announcement_link} placeholder="Ex.: /estoque?ofertas=1 ou https://..." onChange={(e) => set('announcement_link', e.target.value.trim())} />
+            <small>Atalhos: /estoque?ofertas=1 abre as ofertas, /#loja abre o mapa.</small>
+          </label>
+          {s.announcement_enabled !== false && s.announcement && (
+            <div className="announce" style={{ margin: '4px 0 0' }}>
+              {s.announcement}
+            </div>
+          )}
+        </fieldset>
+
+        <fieldset>
+          <legend>Textos</legend>
           <label className="field">
             <span>Texto da garantia</span>
             <textarea rows={2} value={s.warranty_text} onChange={(e) => set('warranty_text', e.target.value)} />

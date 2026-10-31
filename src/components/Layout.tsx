@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useSite } from '../lib/SiteContext'
 import { waLink, WA_GENERAL } from '../lib/whatsapp'
@@ -18,13 +18,63 @@ export function Layout() {
     pageview(pathname)
   }, [pathname])
 
+  // Cabeçalho retrátil: some ao descer, volta ao subir ou ao levar o mouse ao topo
+  const [hidden, setHidden] = useState(false)
+  const [peek, setPeek] = useState(false)
+  const lastY = useRef(0)
+  useEffect(() => {
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const y = window.scrollY
+        const delta = y - lastY.current
+        if (y < 160) setHidden(false)
+        else if (delta > 6) setHidden(true)
+        else if (delta < -6) setHidden(false)
+        lastY.current = y
+        ticking = false
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  // Mouse perto do topo mostra o cabeçalho; afastando, ele volta a se esconder
+  useEffect(() => {
+    if (!hidden) return
+    const onMove = (e: MouseEvent) => setPeek((p) => (p ? e.clientY < 120 : e.clientY < 24))
+    window.addEventListener('mousemove', onMove, { passive: true })
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [hidden])
+  const retracted = hidden && !peek && !open
+
   const wa = waLink(settings, WA_GENERAL)
+  const showBar = settings.announcement_enabled !== false && !!settings.announcement.trim()
+  const link = settings.announcement_link
 
   return (
     <>
       <a href="#conteudo" className="skip">Pular para o conteúdo</a>
-      {settings.announcement && <div className="announce">{settings.announcement}</div>}
-      <header className="header">
+      {showBar &&
+        (link ? (
+          link.startsWith('http') ? (
+            <a className="announce announce--link" href={link} target="_blank" rel="noopener">
+              {settings.announcement}
+            </a>
+          ) : (
+            <a className="announce announce--link" href={link}>
+              {settings.announcement}
+            </a>
+          )
+        ) : (
+          <div className="announce">{settings.announcement}</div>
+        ))}
+      <header
+        className={`header ${retracted ? 'header--hidden' : ''}`}
+        onFocusCapture={() => setPeek(true)}
+        onBlurCapture={() => setPeek(false)}
+      >
         <div className="wrap header__row">
           <Logo />
           <nav className={`nav ${open ? 'nav--open' : ''}`} aria-label="Principal">

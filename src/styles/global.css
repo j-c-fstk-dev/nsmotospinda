@@ -362,6 +362,20 @@ textarea {
   z-index: 40;
   background: var(--night);
   color: var(--on-dark);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.55);
+}
+.header--hidden {
+  transform: translateY(-100%);
+  box-shadow: none;
+}
+.announce--link {
+  display: block;
+  text-decoration: none;
+}
+.announce--link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 .header__row {
   display: flex;

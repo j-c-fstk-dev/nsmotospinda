@@ -88,6 +88,8 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   google_reviews_count: null,
   hours: ['Segunda a sexta: 8h às 18h', 'Sábado: 8h às 14h'],
   announcement: 'Estamos de endereço novo: Rua Doutor Campos Salles, 271, Centro. Venha conhecer!',
+  announcement_enabled: true,
+  announcement_link: '/#loja',
   ga_id: '',
   finance_rate_monthly: 1.99,
   finance_terms: [12, 24, 36, 48],

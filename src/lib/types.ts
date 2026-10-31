@@ -59,6 +59,8 @@ export interface StoreSettings {
   google_reviews_count: number | null
   hours: string[]
   announcement: string
+  announcement_enabled: boolean
+  announcement_link: string
   ga_id: string
   finance_rate_monthly: number
   finance_terms: number[]
